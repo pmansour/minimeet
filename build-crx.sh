@@ -1,1 +1,0 @@
-google-chrome --disable-gpu --pack-extension=src/

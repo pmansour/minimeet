@@ -1,0 +1,19 @@
+{
+  "name": "minimeet",
+  "version": "1.0.0",
+  "description": "Automatically join meetings on your calendar.",
+  "scripts": {
+    "clean": "rm -f *.crx *.pem *.zip",
+    "build": "zip -r minimeet.zip src/",
+    "publish": "./publish.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmansour/minimeet.git"
+  },
+  "author": "Peter Mansour",
+  "bugs": {
+    "url": "https://github.com/pmansour/minimeet/issues"
+  },
+  "homepage": "https://github.com/pmansour/minimeet#readme"
+}
