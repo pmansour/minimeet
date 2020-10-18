@@ -15,16 +15,5 @@ function tryJoinMeeting() {
     buttons[0].click();
 }
 
-// chrome.runtime.onMessage.addListener((request, sender) => {
-//     console.log('Received message');
-//     if (sender.tab) {
-//         console.log('Shouldnt be receiving messages from other tabs. Exiting now.');
-//     }
-
-//     if (request.joinMeeting) {
-//         tryJoinMeeting();
-//         window.setInterval(tryJoinMeeting, retryTimeoutMilliseconds);
-//     }
-// })
 tryJoinMeeting();
 window.setInterval(tryJoinMeeting, retryTimeoutMilliseconds);

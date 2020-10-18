@@ -19,21 +19,7 @@
         "persistent": false
     },
     "browser_action": {
-        "default_title": "Manual page for now."
+        "default_title": "Join the next meeting on your calendar."
     },
-    // "content_scripts": [
-    //     {
-    //         "matches": ["https://meet.google.com/*"],
-    //         "exclude_globs": ["https://meet.google.com/*-*"],
-    //         "run_at": "document_idle",
-    //         "js": ["chooseMeeting.js"]
-    //     },
-    //     {
-    //         "matches": ["https://meet.google.com/*"],
-    //         "include_globs": ["https://meet.google.com/*-*"],
-    //         "run_at": "document_idle",
-    //         "js": ["joinMeeting.js"]
-    //     }
-    // ],
     "manifest_version": 2
 }

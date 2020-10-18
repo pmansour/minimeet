@@ -1,3 +1,8 @@
+/**
+ * Runs on a specific meeting's pre-join page.
+ * Periodically looks for the 'Join now' button and clicks it.
+ */
+
 const API_KEY = 'AIzaSyBAOiSGCe1hy8uKjmS6V-yoClSvhn-thTA';
 
 function joinQueryParams(queryParams) {
@@ -37,7 +42,9 @@ async function getNextMeeting(token) {
 
 function goToMeeting(meetingId) {
     chrome.tabs.create({url: `https://meet.google.com/${meetingId}`}, (tab) => {
-        sendJoinMessage(tab.id);
+        chrome.tabs.executeScript(tab.id, {
+            file: 'joinMeeting.js',
+        });
     });
 }
 
@@ -48,33 +55,11 @@ function joinFirstMeeting() {
     });
 }
 
-/* Stuff in extension. */
-// const retryTimeoutMilliseconds = 2000;
-
-// function tryJoinMeeting() {
-//     console.log('hello');
-//     const buttons = Array.from(document.querySelectorAll('span')).filter((element) => element.textContent.includes('Join now'));
-//     if (!buttons || !buttons.length) {
-//         console.log(`Could not find join button. Will try again in ${retryTimeoutMilliseconds / 1000} seconds.`);
-//         return;
-//     }
-
-//     buttons[0].click();
-// }
-
-function sendJoinMessage(tabId) {
-    chrome.tabs.executeScript(tabId, {
-        file: 'joinMeeting.js',
-        // code: `window.setInterval(() => { ${tryJoinMeeting} }, 2000);`
-    })
-    // chrome.tabs.sendMessage(tabId, {joinMeeting: true});
-}
-
 chrome.runtime.onInstalled.addListener(() => {
-    // TODO: initialize OAuth login.
+    chrome.identity.getAuthToken({interactive: true});
 });
 chrome.runtime.onStartup.addListener(() => {
-    chrome.tabs.create({ url: "meeting.html" });
+    joinFirstMeeting();
 });
 chrome.browserAction.onClicked.addListener(() => {
     joinFirstMeeting();
