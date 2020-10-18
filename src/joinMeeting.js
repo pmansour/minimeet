@@ -3,7 +3,7 @@
  * Periodically looks for the 'Join now' button and clicks it.
  */
 
- const retryTimeoutMilliseconds = 2000;
+const retryTimeoutMilliseconds = 2000;
 
 function tryJoinMeeting() {
     const buttons = Array.from(document.querySelectorAll('span')).filter((element) => element.textContent.includes('Join now'));
@@ -15,5 +15,16 @@ function tryJoinMeeting() {
     buttons[0].click();
 }
 
+// chrome.runtime.onMessage.addListener((request, sender) => {
+//     console.log('Received message');
+//     if (sender.tab) {
+//         console.log('Shouldnt be receiving messages from other tabs. Exiting now.');
+//     }
+
+//     if (request.joinMeeting) {
+//         tryJoinMeeting();
+//         window.setInterval(tryJoinMeeting, retryTimeoutMilliseconds);
+//     }
+// })
 tryJoinMeeting();
 window.setInterval(tryJoinMeeting, retryTimeoutMilliseconds);

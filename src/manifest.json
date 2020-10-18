@@ -2,19 +2,38 @@
     "name": "MiniMeet",
     "version": "1.0",
     "description": "Automatically join meetings on your calendar.",
-    "content_scripts": [
-        {
-            "matches": ["https://meet.google.com/*"],
-            "exclude_globs": ["https://meet.google.com/*-*"],
-            "run_at": "document_idle",
-            "js": ["chooseMeeting.js"]
-        },
-        {
-            "matches": ["https://meet.google.com/*"],
-            "include_globs": ["https://meet.google.com/*-*"],
-            "run_at": "document_idle",
-            "js": ["joinMeeting.js"]
-        }
+    "permissions": [
+        "identity",
+        "https://meet.google.com/"
     ],
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsVSmXT6ll3MPypMspsm516FGGmyF9bNLiWnQ+EUjDCOv6cURtveqEv0qq/lyTSmsJO56edFZtjvXtYlRFBu0kJgVLA+lod4PMBFXYM0m/enqKkOIInVjTOH6Z9yOrf8sseKU2CxsWMxygmPF12tR3vqhJ2GI3wTb92mlq5Iwy89IJchpl1VCfNZehr+/FFjik5rkgv96ASeNqb1H1D1VUOwysxwvYeR/GD3qAnNmBXApDkwKhknIZoLLSmIGQjvKiqRR0OHIyxyjkCgSZYeYwy0mWazQVBcX1cFJHotl4F9EcRYA8UTLodRbm5tPQgBVgPD15y5D9RZKXCtsmStfBQIDAQAB",
+    "oauth2": {
+        "client_id": "4992026557-it4i46ubhjvko1br2c3upson7nag8hug.apps.googleusercontent.com",
+        "scopes": [
+            "email",
+            "https://www.googleapis.com/auth/calendar.events.readonly"
+        ]
+    },
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "browser_action": {
+        "default_title": "Manual page for now."
+    },
+    // "content_scripts": [
+    //     {
+    //         "matches": ["https://meet.google.com/*"],
+    //         "exclude_globs": ["https://meet.google.com/*-*"],
+    //         "run_at": "document_idle",
+    //         "js": ["chooseMeeting.js"]
+    //     },
+    //     {
+    //         "matches": ["https://meet.google.com/*"],
+    //         "include_globs": ["https://meet.google.com/*-*"],
+    //         "run_at": "document_idle",
+    //         "js": ["joinMeeting.js"]
+    //     }
+    // ],
     "manifest_version": 2
 }

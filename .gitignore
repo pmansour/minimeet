@@ -106,3 +106,4 @@ dist
 # Extension binaries and keys
 *.crx
 *.pem
+*.zip
