@@ -5,7 +5,6 @@
     "permissions": [
         "https://meet.google.com/"
     ],
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsVSmXT6ll3MPypMspsm516FGGmyF9bNLiWnQ+EUjDCOv6cURtveqEv0qq/lyTSmsJO56edFZtjvXtYlRFBu0kJgVLA+lod4PMBFXYM0m/enqKkOIInVjTOH6Z9yOrf8sseKU2CxsWMxygmPF12tR3vqhJ2GI3wTb92mlq5Iwy89IJchpl1VCfNZehr+/FFjik5rkgv96ASeNqb1H1D1VUOwysxwvYeR/GD3qAnNmBXApDkwKhknIZoLLSmIGQjvKiqRR0OHIyxyjkCgSZYeYwy0mWazQVBcX1cFJHotl4F9EcRYA8UTLodRbm5tPQgBVgPD15y5D9RZKXCtsmStfBQIDAQAB",
     "background": {
         "scripts": ["background.js"],
         "persistent": false
