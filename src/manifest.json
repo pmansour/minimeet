@@ -1,6 +1,6 @@
 {
     "name": "MiniMeet",
-    "version": "0.1",
+    "version": "0.1.1",
     "description": "Automatically join meetings on your calendar.",
     "update_url": "https://stg-minimeet-public.storage.googleapis.com/inlcnegncobjeadgjlacjhkgdmoikncb/updates.xml",
     "permissions": [

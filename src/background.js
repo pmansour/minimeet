@@ -14,9 +14,11 @@ function startMeeting(meetingId) {
 
 function tryJoinNextMeeting(tabId) {
     chrome.tabs.sendMessage(tabId, {action: 'getNextMeetingId'}, (response) => {
-        console.debug('Received response');
-        if (response.nextMeetingId) {
-            startMeeting(response.nextMeetingId);
+        console.debug(`Sent message, got back: ${JSON.stringify(response)}`);
+        if (response && response.nextMeetingId) {
+            const nextMeetingId = response.nextMeetingId;
+            console.debug(`Next meeting ID is ${nextMeetingId}`);
+            startMeeting(nextMeetingId);
             chrome.tabs.remove(tabId);
             return;
         }
