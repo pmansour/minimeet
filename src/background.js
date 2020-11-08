@@ -36,9 +36,6 @@ function startMeetTab() {
     });
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.identity.getAuthToken({interactive: true});
-});
 chrome.runtime.onStartup.addListener(() => {
     startMeetTab();
 });

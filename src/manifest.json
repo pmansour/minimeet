@@ -1,6 +1,6 @@
 {
     "name": "MiniMeet",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Automatically join meetings on your calendar.",
     "permissions": [
         "https://meet.google.com/"
