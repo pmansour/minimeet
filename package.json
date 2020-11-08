@@ -4,7 +4,7 @@
   "description": "Automatically join meetings on your calendar.",
   "scripts": {
     "clean": "rm -f *.crx *.pem *.zip",
-    "build": "zip -r minimeet.zip src/",
+    "build": "mkdir -p bin && zip -r bin/minimeet.zip src/",
     "publish": "./publish.sh"
   },
   "repository": {

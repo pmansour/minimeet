@@ -104,6 +104,7 @@ dist
 .tern-port
 
 # Extension binaries and keys
+bin/
 *.crx
 *.pem
 *.zip
