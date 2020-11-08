@@ -4,6 +4,7 @@
  */
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.debug(`Listener received message: ${JSON.stringify(request)}`);
     if (sender.tab) {
         console.warn('Ignoring message received from other tab.');
         return;

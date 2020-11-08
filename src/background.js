@@ -12,17 +12,23 @@ function startMeeting(meetingId) {
     });
 }
 
-function tryJoinNextMeeting(tabId) {
+// Interval ID for the "find meeting" retry loop.
+let findMeetingRetryLoopId;
+
+function tryFindNextMeeting(tabId) {
     chrome.tabs.sendMessage(tabId, {action: 'getNextMeetingId'}, (response) => {
-        console.debug(`Sent message, got back: ${JSON.stringify(response)}`);
-        if (response && response.nextMeetingId) {
-            const nextMeetingId = response.nextMeetingId;
-            console.debug(`Next meeting ID is ${nextMeetingId}`);
-            startMeeting(nextMeetingId);
-            chrome.tabs.remove(tabId);
+        console.debug(`Sent getNextMeetingId message, got back: ${JSON.stringify(response)}`);
+        if (!response || !response.nextMeetingId) {
+            console.warn('Response is empty.');
             return;
         }
-        setTimeout(() => tryJoinNextMeeting(tabId), retryTimeoutMilliseconds);
+
+        const nextMeetingId = response.nextMeetingId;
+        console.debug(`Next meeting ID is ${nextMeetingId}`);
+        startMeeting(nextMeetingId);
+        chrome.tabs.remove(tabId);
+
+        clearInterval(findMeetingRetryLoopId);
     });
 }
 
@@ -31,7 +37,10 @@ function startMeetTab() {
         chrome.tabs.executeScript(tab.id, {
             file: 'findMeeting.js',
         }, () => {
-            tryJoinNextMeeting(tab.id);
+            findMeetingRetryLoopId = setInterval(
+                tryFindNextMeeting,
+                retryTimeoutMilliseconds,
+                tab.id);
         });
     });
 }
