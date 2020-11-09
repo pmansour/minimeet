@@ -22,7 +22,7 @@ function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
 
         err = chrome.runtime.lastError.message;
         console.error(`Error while injecting script in Meet tab '${tabId}': ${err}`);
-        setTimeout(tryInjectMeetingFinderScript, retryTimeoutMilliseconds, tabId, scriptFile, onSuccess);
+        setTimeout(injectScriptWithRetries, retryTimeoutMilliseconds, tabId, scriptFile, onSuccess);
     });
 }
 
