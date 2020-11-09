@@ -26,4 +26,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-console.verbose('Added listener.');
+console.debug('Added listener.');
