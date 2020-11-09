@@ -24,4 +24,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         default:
             console.error('Received unknown request action.');
     }
-})
+});
+
+console.verbose('Added listener.');
