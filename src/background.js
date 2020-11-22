@@ -22,8 +22,38 @@ function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
 
         err = chrome.runtime.lastError.message;
         console.error(`Error while injecting script in Meet tab '${tabId}': ${err}`);
+        console.error(chrome.runtime.lastError);
         setTimeout(injectScriptWithRetries, retryTimeoutMilliseconds, tabId, scriptFile, onSuccess);
     });
+}
+
+/** Checks whether the device is online and the given URL is reachable. */
+async function isOnlineAndReachable(url) {
+    if (!navigator.onLine) {
+        console.warn('Device is offline.');
+        return false;
+    }
+    try {
+        res = await fetch(url);
+        console.debug(`Test request to '${url}' returned with HTTP ${res.status}.`);
+        return res.ok;
+    } catch(e) {
+        console.warn(`Failed to make test request to '${url}'`);
+        console.warn(e);
+        return false;
+    }
+}
+
+/** Executes the given callback when the device is online and the given URL is reachable. */
+async function waitForOnlineAndReachable(url, callback) {
+    if (await isOnlineAndReachable(url)) {
+        console.debug(`Device is online and '${url}' is reachable.`);
+        callback();
+        return;
+    }
+
+    console.info(`Target URL is unreachable. Waiting ${+((retryTimeoutMilliseconds / 1000).toFixed(2))} seconds before retrying..`);
+    setTimeout(() => waitForOnlineAndReachable(url, callback), retryTimeoutMilliseconds);
 }
 
 // Interval ID for the "find meeting" retry loop.
@@ -49,12 +79,17 @@ function tryFindNextMeeting(tabId) {
 
 /** Opens the Google Meet homepage and starts looking for the next meeting. */
 function startMeetTab() {
-    chrome.tabs.create({ url: 'https://meet.google.com' }, (tab) => {
-        injectScriptWithRetries(tab.id, 'findMeeting.js', () => {
-            findMeetingRetryLoopId = setInterval(
-                tryFindNextMeeting,
-                retryTimeoutMilliseconds,
-                tab.id);
+    const url = 'https://meet.google.com';
+    waitForOnlineAndReachable(url, () => {
+        chrome.tabs.create({ url }, (tab) => {
+            console.debug('Started new tab:');
+            console.debug(tab);
+            injectScriptWithRetries(tab.id, 'findMeeting.js', () => {
+                findMeetingRetryLoopId = setInterval(
+                    tryFindNextMeeting,
+                    retryTimeoutMilliseconds,
+                    tab.id);
+            });
         });
     });
 }
