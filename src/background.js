@@ -61,19 +61,27 @@ let findMeetingRetryLoopId;
 
 /** Tries to find the next meeting in the given tab. */
 function tryFindNextMeeting(tabId) {
-    chrome.tabs.sendMessage(tabId, {action: 'getNextMeetingId'}, (response) => {
-        console.debug(`Sent getNextMeetingId message, got back: ${JSON.stringify(response)}`);
-        if (!response || !response.nextMeetingId) {
-            console.warn('Response is empty.');
+    chrome.tabs.get(tabId, (tab) => {
+        if (!tab) {
+            console.error('Meet tab was closed before finding next meeting.');
+            clearInterval(findMeetingRetryLoopId);
             return;
         }
 
-        const nextMeetingId = response.nextMeetingId;
-        console.debug(`Next meeting ID is ${nextMeetingId}`);
-        startMeeting(nextMeetingId);
-
-        clearInterval(findMeetingRetryLoopId);
-        chrome.tabs.remove(tabId);
+        chrome.tabs.sendMessage(tabId, {action: 'getNextMeetingId'}, (response) => {
+            console.debug(`Sent getNextMeetingId message, got back: ${JSON.stringify(response)}`);
+            if (!response || !response.nextMeetingId) {
+                console.warn('Response is empty.');
+                return;
+            }
+    
+            const nextMeetingId = response.nextMeetingId;
+            console.debug(`Next meeting ID is ${nextMeetingId}`);
+            startMeeting(nextMeetingId);
+    
+            clearInterval(findMeetingRetryLoopId);
+            chrome.tabs.remove(tabId);
+        });
     });
 }
 
