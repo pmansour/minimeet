@@ -4,6 +4,14 @@
 
 const retryTimeoutMilliseconds = 3000;
 
+/** Prints the given failure message and the last error (if present). */
+function fail(message) {
+    console.error(message);
+    if (chrome.runtime.lastError) {
+        console.debug(`Last error: ${chrome.runtime.lastError.message}`);
+    }            
+}
+
 /** Opens the meeting with the given ID in a new tab and injects a script to hit 'Join'. */
 function startMeeting(meetingId) {
     chrome.tabs.create({url: `https://meet.google.com/${meetingId}`}, (tab) => {
@@ -20,9 +28,7 @@ function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
             return;
         }
 
-        err = chrome.runtime.lastError.message;
-        console.error(`Error while injecting script in Meet tab '${tabId}': ${err}`);
-        console.error(chrome.runtime.lastError);
+        fail(`Error while injecting script in Meet tab '${tabId}'.`);
         setTimeout(injectScriptWithRetries, retryTimeoutMilliseconds, tabId, scriptFile, onSuccess);
     });
 }
@@ -63,7 +69,7 @@ let findMeetingRetryLoopId;
 function tryFindNextMeeting(tabId) {
     chrome.tabs.get(tabId, (tab) => {
         if (!tab) {
-            console.error('Meet tab was closed before finding next meeting.');
+            fail('Meet tab was closed before finding next meeting.');
             clearInterval(findMeetingRetryLoopId);
             return;
         }
@@ -71,14 +77,14 @@ function tryFindNextMeeting(tabId) {
         chrome.tabs.sendMessage(tabId, {action: 'getNextMeetingId'}, (response) => {
             console.debug(`Sent getNextMeetingId message, got back: ${JSON.stringify(response)}`);
             if (!response || !response.nextMeetingId) {
-                console.warn('Response is empty.');
+                console.info('No meetings found.');
                 return;
             }
-    
+
             const nextMeetingId = response.nextMeetingId;
             console.debug(`Next meeting ID is ${nextMeetingId}`);
             startMeeting(nextMeetingId);
-    
+
             clearInterval(findMeetingRetryLoopId);
             chrome.tabs.remove(tabId);
         });
