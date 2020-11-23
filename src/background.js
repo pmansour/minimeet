@@ -4,6 +4,27 @@
 
 const retryTimeoutMilliseconds = 3000;
 
+function newContext() {
+    return {
+        isActive: false,
+
+        timeoutIds = [],
+    };
+}
+
+function resetContext() {
+    if (activeContext.isActive) {
+        console.warn('Resetting current active context.');
+        console.debug(activeContext);
+
+        activeContext.timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
+    }
+
+    activeContext = newContext();
+}
+
+activeContext = resetContext();
+
 /** Prints the given failure message and the last error (if present). */
 function fail(message) {
     console.error(message);
@@ -15,7 +36,7 @@ function fail(message) {
 /** Opens the meeting with the given ID in a new tab and injects a script to hit 'Join'. */
 function startMeeting(meetingId) {
     chrome.tabs.create({url: `https://meet.google.com/${meetingId}`}, (tab) => {
-        injectScriptWithRetries(tab.id, 'joinMeeting.js');
+        injectScriptWithRetries(tab.id, 'joinMeeting.js', resetContext);
     });
 }
 
@@ -29,7 +50,10 @@ function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
         }
 
         fail(`Error while injecting script in Meet tab '${tabId}'.`);
-        setTimeout(injectScriptWithRetries, retryTimeoutMilliseconds, tabId, scriptFile, onSuccess);
+        activeContext.timeoutIds.push(setTimeout(
+            injectScriptWithRetries,
+            retryTimeoutMilliseconds,
+            tabId, scriptFile, onSuccess));
     });
 }
 
@@ -59,18 +83,18 @@ async function waitForOnlineAndReachable(url, callback) {
     }
 
     console.info(`Target URL is unreachable. Waiting ${+((retryTimeoutMilliseconds / 1000).toFixed(2))} seconds before retrying..`);
-    setTimeout(() => waitForOnlineAndReachable(url, callback), retryTimeoutMilliseconds);
+    activeContext.timeoutIds.push(setTimeout(
+        waitForOnlineAndReachable,
+        retryTimeoutMilliseconds,
+        url, callback));
 }
-
-// Interval ID for the "find meeting" retry loop.
-let findMeetingRetryLoopId;
 
 /** Tries to find the next meeting in the given tab. */
 function tryFindNextMeeting(tabId) {
     chrome.tabs.get(tabId, (tab) => {
         if (!tab) {
             fail('Meet tab was closed before finding next meeting.');
-            clearInterval(findMeetingRetryLoopId);
+            resetContext();
             return;
         }
 
@@ -78,6 +102,10 @@ function tryFindNextMeeting(tabId) {
             console.debug(`Sent getNextMeetingId message, got back: ${JSON.stringify(response)}`);
             if (!response || !response.nextMeetingId) {
                 console.info('No meetings found.');
+                activeContext.timeoutIds.push(setTimeout(
+                    tryFindNextMeeting,
+                    retryTimeoutMilliseconds,
+                    tabId));
                 return;
             }
 
@@ -85,7 +113,6 @@ function tryFindNextMeeting(tabId) {
             console.debug(`Next meeting ID is ${nextMeetingId}`);
             startMeeting(nextMeetingId);
 
-            clearInterval(findMeetingRetryLoopId);
             chrome.tabs.remove(tabId);
         });
     });
@@ -98,19 +125,23 @@ function startMeetTab() {
         chrome.tabs.create({ url }, (tab) => {
             console.debug('Started new tab:');
             console.debug(tab);
-            injectScriptWithRetries(tab.id, 'findMeeting.js', () => {
-                findMeetingRetryLoopId = setInterval(
-                    tryFindNextMeeting,
-                    retryTimeoutMilliseconds,
-                    tab.id);
-            });
+            injectScriptWithRetries(tab.id, 'findMeeting.js', () => tryFindNextMeeting(tab.id));
         });
     });
 }
 
-chrome.runtime.onStartup.addListener(() => {
+function startContext() {
+    if (activeContext.isActive) {
+        resetContext();
+    }
+
+    activeContext.isActive = true;
     startMeetTab();
+}
+
+chrome.runtime.onStartup.addListener(() => {
+    startContext();
 });
 chrome.browserAction.onClicked.addListener(() => {
-    startMeetTab();
+    startContext();
 });
