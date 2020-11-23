@@ -8,7 +8,7 @@ function newContext() {
     return {
         isActive: false,
 
-        timeoutIds = [],
+        timeoutIds: [],
     };
 }
 
