@@ -3,7 +3,7 @@
  */
 
 const retryTimeoutMilliseconds = 3000;
-let activeContext = resetContext();
+let activeContext = newContext();
 
 function newContext() {
     return {
