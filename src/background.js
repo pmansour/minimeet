@@ -3,6 +3,7 @@
  */
 
 const retryTimeoutMilliseconds = 3000;
+let activeContext = resetContext();
 
 function newContext() {
     return {
@@ -22,8 +23,6 @@ function resetContext() {
 
     activeContext = newContext();
 }
-
-activeContext = resetContext();
 
 /** Prints the given failure message and the last error (if present). */
 function fail(message) {
