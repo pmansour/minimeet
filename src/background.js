@@ -24,12 +24,11 @@ function resetContext() {
     activeContext = newContext();
 }
 
-/** Prints the given failure message and the last error (if present). */
-function fail(message) {
-    console.error(message);
+/** Prints the the last error (if present). */
+function checkError() {
     if (chrome.runtime.lastError) {
         console.debug(`Last error: ${chrome.runtime.lastError.message}`);
-    }            
+    }
 }
 
 /** Opens the meeting with the given ID in a new tab and injects a script to hit 'Join'. */
@@ -48,7 +47,8 @@ function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
             return;
         }
 
-        fail(`Error while injecting script in Meet tab '${tabId}'.`);
+        console.error(`Error while injecting script in Meet tab '${tabId}'.`);
+        checkError();
         activeContext.timeoutIds.push(setTimeout(
             injectScriptWithRetries,
             retryTimeoutMilliseconds,
@@ -92,7 +92,8 @@ async function waitForOnlineAndReachable(url, callback) {
 function tryFindNextMeeting(tabId) {
     chrome.tabs.get(tabId, (tab) => {
         if (!tab) {
-            fail('Meet tab was closed before finding next meeting.');
+            console.warn('Meet tab was closed before finding next meeting.');
+            checkError();
             resetContext();
             return;
         }
