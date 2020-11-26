@@ -12,9 +12,9 @@
     "browser_action": {
         "default_title": "Join the next meeting on your calendar."
     },
-    "manifest_version": 2
-    // "web_accessible_resources": [
-    //     "bootstrap.min.css.map",
-    //     "scripts/*.js"
-    // ]
+    "manifest_version": 2,
+    "web_accessible_resources": [
+        "scripts/findMeeting.js",
+        "scripts/joinMeeting.js"
+    ]
 }

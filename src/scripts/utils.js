@@ -65,6 +65,21 @@ export function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
     });
 }
 
+export function injectModuleScriptWithRetries(tabId, scriptFile, onSuccess = null) {
+    injectScriptWithRetries(tabId, 'scripts/moduleLoader.js', () => {
+        debug(`Injected module loader into tab '${tabId}'.`);
+        chrome.tabs.sendMessage(tabId, {scriptRelativeUrl: scriptFile}, (response) => {
+            if (response.done) {
+                debug(`Module loader loaded script '${scriptFile}'.`);
+                if (onSuccess) onSuccess();
+                return;
+            }
+
+            error(`Module loader returned unexpected response: ${response}`);
+        });
+    });
+}
+
 /** Checks whether the device is online and the given URL is reachable. */
 export async function isOnlineAndReachable(url) {
     if (!navigator.onLine) {

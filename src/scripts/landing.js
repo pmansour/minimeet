@@ -1,4 +1,4 @@
-import { checkError, injectScriptWithRetries, waitForOnlineAndReachable, warn, debug, info } from './utils.js';
+import { checkError, injectScriptWithRetries, waitForOnlineAndReachable, warn, debug, info, injectModuleScriptWithRetries } from './utils.js';
 import { meetBaseUrl, retryTimeoutMilliseconds } from './config.js';
 
 /** Opens the meeting with the given ID in a new tab and injects a script to hit 'Join'. */
@@ -41,7 +41,7 @@ function startMeetTab() {
         chrome.tabs.create({ url: meetBaseUrl }, (tab) => {
             debug('Started new tab:');
             debug(tab);
-            injectScriptWithRetries(tab.id, 'scripts/findMeeting.js', () => tryFindNextMeeting(tab.id));
+            injectModuleScriptWithRetries(tab.id, 'scripts/findMeeting.js', () => tryFindNextMeeting(tab.id));
         });
     });
 }
