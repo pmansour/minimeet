@@ -2,20 +2,6 @@ import { checkError, injectScriptWithRetries, getTab, sendMessage, waitForOnline
 
 async function getLoginState(tabId, email) {
     return new Promise(async (resolve, reject) => {
-        const tab = await getTab(tabId);
-        if (!tab) {
-            warn('Login tab was closed.');
-            checkError();
-            resolve(LOGIN_STATE.TAB_CLOSED);
-            return;
-        }
-        if (!tab.url) {
-            info('Login tab is inaccessible.');
-            checkError();
-            resolve(LOGIN_STATE.TAB_INACCESSIBLE);
-            return;
-        }
-
         sendMessage(tabId, {action: LOGIN_ACTION.GET_STATE, email}, (response) => {
             if (!response || !response.state) {
                 reject();
@@ -55,6 +41,7 @@ export class LoginFlow {
     _email = '';
     _password = '';
     _callback = null;
+    _tabId = null;
     _pollId = null;
 
     constructor(email, password, callback) {
@@ -65,10 +52,12 @@ export class LoginFlow {
 
     /** Opens the Google Accounts login page and starts trying to complete the sign-in flow. */
     async start() {
-        await waitForOnlineAndReachable(googleLoginUrl);
-        chrome.tabs.create({ url: googleLoginUrl }, (tab) => {
+        await waitForOnlineAndReachable(baseGoogleLoginUrl);
+        const urlWithRedirect = `${baseGoogleLoginUrl}?continue=${encodeURIComponent(meetBaseUrl)}`
+        chrome.tabs.create({ url: urlWithRedirect }, (tab) => {
+            this._tabId = tab.id;
             const onContentScriptLoaded = () => {
-                this._pollId = setInterval(() => this.pollLogin(tab.id), loginPollTimeoutMillseconds);
+                this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
             };
             setTimeout(
                 () => injectScriptWithRetries(tab.id, 'content/login.js', onContentScriptLoaded),
@@ -78,23 +67,42 @@ export class LoginFlow {
         });
     }
 
-    async pollLogin(tabId) {
+    async pollLogin() {
         debug(`Polling login state..`);
-        const state = await getLoginState(tabId, this._email);
-        if (state === LOGIN_STATE.TAB_INACCESSIBLE || state === LOGIN_STATE.TAB_CLOSED) {
-            // Tab navigates to another URL when login is complete.
+        if (await this.isLoginTabDone()) {
             this.markComplete();
             return;
         }
+        const state = await getLoginState(this._tabId, this._email);
         const response = generateNextLoginMessage(state, this._email, this._password);
         if (response) {
-            sendMessage(tabId, response);
+            sendMessage(this._tabId, response);
         }
+    }
+
+    async isLoginTabDone() {
+        const tab = await getTab(this._tabId);
+        debug(`Tab: ${JSON.stringify(tab)}`);
+        if (!tab) {
+            checkError();
+            warn('Login tab was closed prematurely.');
+            return true;
+        }
+        if (!tab.url) {
+            checkError();
+            warn('Login tab is inaccessible.');
+            return true;
+        }
+        if (new URL(tab.url).hostname === new URL(meetBaseUrl).hostname) {
+            info('Login tab redirected to Meet successfully.');
+            return true;
+        }
+        return false;
     }
 
     markComplete() {
         clearInterval(this._pollId);
-        info('Login flow is complete.');
+        info('Login flow is complete!');
         this._callback();
     }
 }

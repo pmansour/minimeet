@@ -7,9 +7,6 @@ const LOGIN_STATE = Object.freeze({
     ENTER_EMAIL: 3,
     ENTER_PASSWORD_SAME_ACCOUNT: 4,
     ENTER_PASSWORD_WRONG_ACCOUNT: 5,
-
-    TAB_CLOSED: 6,
-    TAB_INACCESSIBLE: 7,
 });
 
 const LOGIN_ACTION = Object.freeze({
