@@ -19,7 +19,7 @@
     "content_scripts": [
         {
             "matches": ["https://accounts.google.com/*", "https://meet.google.com/*"],
-            "js": ["shared/dom.js", "shared/state.js"]
+            "js": ["shared/config.js", "shared/dom.js", "shared/logging.js", "shared/state.js"]
         }
     ]
 }

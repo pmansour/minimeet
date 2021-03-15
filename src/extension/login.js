@@ -1,4 +1,4 @@
-import { checkError, injectScriptWithRetries, isTabOpen, sendMessage } from './utils.js';
+import { checkError, injectScriptWithRetries, isTabOpen, sendMessage, waitForOnlineAndReachable } from './utils.js';
 
 /** Reacts to the current login state. */
 function handleLoginState(tabId, state) {
@@ -37,7 +37,7 @@ async function getLoginState(tabId) {
             return;
         }
 
-        sendMessage(tabId, {action: LOGIN_ACTION.GET_STATE}, (response) => {
+        sendMessage(tabId, {action: LOGIN_ACTION.GET_STATE, email: emailAddress}, (response) => {
             if (!response || !response.state) {
                 reject();
                 return;
@@ -49,6 +49,7 @@ async function getLoginState(tabId) {
 }
 
 async function pollLogin(tabId) {
+    debug(`Polling login state..`);
     // TODO: add stopping condition once login is complete.
     const state = await getLoginState(tabId);
     handleLoginState(tabId, state);
@@ -59,6 +60,9 @@ async function pollLogin(tabId) {
 export async function startLoginFlow() {
     await waitForOnlineAndReachable(googleLoginUrl);
     chrome.tabs.create({ url: googleLoginUrl }, (tab) => {
-        injectScriptWithRetries(tab.id, 'content/login.js', () => pollLogin(tab.id));
+        // Wait till the other scripts have loaded.
+        setTimeout(
+            () => injectScriptWithRetries(tab.id, 'content/login.js', () => pollLogin(tab.id)),
+            5000);
     });
 }

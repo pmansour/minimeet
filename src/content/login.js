@@ -12,7 +12,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     switch (request.action) {
         case LOGIN_ACTION.GET_STATE:
-            sendResponse({state: getState(request.email)});
+            const state = getState(request.email);
+            debug(`Sending back state '${state}'..`);
+            sendResponse({state});
             break;
         case LOGIN_ACTION.CHOOSE_EXISTING_PROFILE:
             clickProfileIdentifier(request.email);
@@ -76,5 +78,5 @@ function enterPassword(password) {
 }
 
 function clickSwitchAccount() {
-    getElement(byAriaLabelSubstring('Switch account')).click();
+    getElement(byAriaLabel('Switch account')).click();
 }
