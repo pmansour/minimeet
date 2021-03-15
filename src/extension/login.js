@@ -40,18 +40,26 @@ function generateNextLoginMessage(state, email, password) {
 export class LoginFlow {
     _email = '';
     _password = '';
-    _callback = null;
+
+    _promise = null;
+    _resolve = null;
+    _reject = null;
+
     _tabId = null;
     _pollId = null;
 
-    constructor(email, password, callback) {
+    constructor(email, password) {
         this._email = email;
         this._password = password;
-        this._callback = callback;
     }
 
     /** Opens the Google Accounts login page and starts trying to complete the sign-in flow. */
     async start() {
+        this._promise = new Promise((resolve, reject) => {
+            this._resolve = resolve;
+            this._reject = reject;
+        });
+
         await waitForOnlineAndReachable(baseGoogleLoginUrl);
         const urlWithRedirect = `${baseGoogleLoginUrl}?continue=${encodeURIComponent(meetBaseUrl)}`
         chrome.tabs.create({ url: urlWithRedirect }, (tab) => {
@@ -65,12 +73,13 @@ export class LoginFlow {
                 // TODO: figure out a better way to actually wait for scripts loading.
                 2000);
         });
+
+        return this._promise;
     }
 
     async pollLogin() {
         debug(`Polling login state..`);
         if (await this.isLoginTabDone()) {
-            this.markComplete();
             return;
         }
         const state = await getLoginState(this._tabId, this._email);
@@ -86,23 +95,30 @@ export class LoginFlow {
         if (!tab) {
             checkError();
             warn('Login tab was closed prematurely.');
+            this.markComplete(false);
             return true;
         }
         if (!tab.url) {
             checkError();
             warn('Login tab is inaccessible.');
+            this.markComplete(false);
             return true;
         }
         if (new URL(tab.url).hostname === new URL(meetBaseUrl).hostname) {
             info('Login tab redirected to Meet successfully.');
+            this.markComplete(true);
             return true;
         }
         return false;
     }
 
-    markComplete() {
+    markComplete(successful) {
         clearInterval(this._pollId);
         info('Login flow is complete!');
-        this._callback();
+        if (successful) {
+            this._resolve();
+        } else {
+            this._reject();
+        }
     }
 }

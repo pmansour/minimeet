@@ -48,8 +48,14 @@ async function pollForNextMeeting(tabId) {
 
 /** Opens the Google Meet homepage and starts looking for the next meeting. */
 export async function startMeetTab() {
-    await waitForOnlineAndReachable(meetBaseUrl);
+    // TODO: figure out why this keeps getting blocked by CORS.
+    // await waitForOnlineAndReachable(meetBaseUrl);
     chrome.tabs.create({ url: meetBaseUrl }, (tab) => {
-        injectScriptWithRetries(tab.id, 'content/findMeeting.js', () => pollForNextMeeting(tab.id));
+        const onContentScriptLoaded = () => pollForNextMeeting(tab.id);
+        setTimeout(
+            () => injectScriptWithRetries(tab.id, 'content/findMeeting.js', onContentScriptLoaded),
+            // Wait till the "shared" content scripts have loaded before injecting login.js.
+            // TODO: figure out a better way to actually wait for scripts loading.
+            2000);
     });
 }
