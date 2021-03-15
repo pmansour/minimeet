@@ -1,4 +1,4 @@
-import { checkError, injectScriptWithRetries, isTabOpen, sendMessage, waitForOnlineAndReachable } from './utils.js';
+import { checkError, injectScriptWithRetries, getTab, sendMessage, waitForOnlineAndReachable } from './utils.js';
 
 /** Opens the meeting with the given ID in the given tab, and injects a script to hit 'Join'. */
 function startMeeting(meetingId, existingTabId = null) {
@@ -15,7 +15,7 @@ function startMeeting(meetingId, existingTabId = null) {
 /** Tries to find the next meeting in the given tab. */
 async function getNextMeeting(tabId) {
     return new Promise(async (resolve, reject) => {
-        if (!await isTabOpen(tabId)) {
+        if (!await getTab(tabId)) {
             warn('Meet tab was closed before finding next meeting.');
             checkError();
             reject();

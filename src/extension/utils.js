@@ -5,9 +5,9 @@ export function checkError() {
     }
 }
 
-export function isTabOpen(tabId) {
+export function getTab(tabId) {
     return new Promise((resolve) => {
-        chrome.tabs.get(tabId, (tab) => resolve(!!tab));
+        chrome.tabs.get(tabId, (tab) => resolve(tab));
     });
 }
 
