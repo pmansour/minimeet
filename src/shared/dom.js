@@ -1,10 +1,10 @@
-
-// Private / unexported stuff.
+/* Contains helper functions for dealing with DOM elements. */
 
 /* Returns whether the given DOM element is visible. */
 function isVisible(el) {
     return !!el && el.computedStyleMap().get('display').value != 'none';
 }
+/* Returns the text content of the given element, not including its descendants. */
 function getSelfTextContent(el) {
     // Only get this element's text, not its descendants.
     return (el.childNodes[0] && el.childNodes[0].nodeValue) || '';
@@ -35,9 +35,7 @@ function byVisibleSelfText(substr) {
     }
 }
 function bySelector(selector) {
-    return {
-        selector,
-    }
+    return { selector }
 }
 
 /* Tries to find a DOM element with the given selector and optional filter functions, or null

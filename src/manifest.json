@@ -7,7 +7,9 @@
         "https://accounts.google.com/"
     ],
     "background": {
-        "scripts": ["scripts/background.js"],
+        "scripts": [
+            "extension/background.js"
+        ],
         "persistent": false
     },
     "browser_action": {
@@ -16,8 +18,8 @@
     "manifest_version": 2,
     "content_scripts": [
         {
-            "matches": ["https://accounts.google.com/*"],
-            "js": ["scripts/dom.js", "scripts/login.js"]
+            "matches": ["https://accounts.google.com/*", "https://meet.google.com/*"],
+            "js": ["shared/dom.js", "shared/state.js"]
         }
     ]
 }

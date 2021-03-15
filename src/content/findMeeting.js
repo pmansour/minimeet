@@ -4,17 +4,17 @@
  */
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.debug(`Listener received message: ${JSON.stringify(request)}`);
+    debug(`Listener received message: ${JSON.stringify(request)}`);
     if (sender.tab) {
-        console.warn('Ignoring message received from other tab.');
+        warn('Ignoring message received from other tab.');
         return;
     }
 
     switch (request.action) {
-        case 'getNextMeetingId':
+        case MEET_ACTION.GET_NEXT_MEETING_ID:
             const meetings = document.querySelectorAll('[data-call-id]');
             if (!meetings || !meetings.length) {
-                console.debug('Could not find any meetings.');
+                debug('Could not find any meetings.');
                 sendResponse({nextMeetingId: null});
                 return;
             }
@@ -22,8 +22,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({nextMeetingId: meetings[0].dataset['callId']});
             break;
         default:
-            console.error('Received unknown request action.');
+            error('Received unknown request action.');
     }
 });
 
-console.debug('Added listener.');
+debug('Added listener.');
