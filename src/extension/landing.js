@@ -1,3 +1,4 @@
-import { startLoginFlow } from './login.js';
+import { LoginFlow } from './login.js';
 
-startLoginFlow();
+const loginFlow = new LoginFlow(emailAddress, password, () => info('Login flow is complete!'));
+loginFlow.startLoginFlow();

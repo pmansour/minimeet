@@ -11,4 +11,5 @@ const meetBaseUrl = 'https://meet.google.com';
 /** URL for signing in to Google. */
 const googleLoginUrl = 'https://accounts.google.com/signin/v2';
 
-const emailAddress = 'raspberrypi@stgeorgeseattle.org';
+const emailAddress = '<REDACTED>';
+const password = '<REDACTED>';
