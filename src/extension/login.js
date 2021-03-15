@@ -61,6 +61,7 @@ export async function startLoginFlow() {
     await waitForOnlineAndReachable(googleLoginUrl);
     chrome.tabs.create({ url: googleLoginUrl }, (tab) => {
         // Wait till the other scripts have loaded.
+        // TODO: figure out a better way to actually wait for scripts loading.
         setTimeout(
             () => injectScriptWithRetries(tab.id, 'content/login.js', () => pollLogin(tab.id)),
             5000);
