@@ -1,9 +1,9 @@
-import { checkError, injectScriptWithRetries, getTab, sendMessage, waitForOnlineAndReachable } from './utils.js';
+import { checkError, injectWithDependencies, getTab, sendMessage, waitForOnlineAndReachable } from './utils.js';
 
 /** Opens the meeting with the given ID in the given tab, and injects a script to hit 'Join'. */
 function startMeeting(meetingId, existingTabId = null) {
     const url = `${meetBaseUrl}/${meetingId}`;
-    const onTabReady = (tab) => injectScriptWithRetries(tab.id, 'content/joinMeeting.js');
+    const onTabReady = (tab) => injectWithDependencies(tab.id, 'content/joinMeeting.js');
 
     if (existingTabId) {
         chrome.tabs.update(existingTabId, {url}, onTabReady); 
@@ -52,10 +52,6 @@ export async function startMeetTab() {
     // await waitForOnlineAndReachable(meetBaseUrl);
     chrome.tabs.create({ url: meetBaseUrl }, (tab) => {
         const onContentScriptLoaded = () => pollForNextMeeting(tab.id);
-        setTimeout(
-            () => injectScriptWithRetries(tab.id, 'content/findMeeting.js', onContentScriptLoaded),
-            // Wait till the "shared" content scripts have loaded before injecting login.js.
-            // TODO: figure out a better way to actually wait for scripts loading.
-            2000);
+        injectWithDependencies(tab.id, 'content/findMeeting.js', onContentScriptLoaded);
     });
 }

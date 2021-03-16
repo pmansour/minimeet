@@ -1,4 +1,4 @@
-import { checkError, injectScriptWithRetries, getTab, sendMessage, waitForOnlineAndReachable } from './utils.js';
+import { checkError, injectWithDependencies, getTab, sendMessage, waitForOnlineAndReachable } from './utils.js';
 
 async function getLoginState(tabId, email) {
     return new Promise(async (resolve, reject) => {
@@ -67,11 +67,7 @@ export class LoginFlow {
             const onContentScriptLoaded = () => {
                 this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
             };
-            setTimeout(
-                () => injectScriptWithRetries(tab.id, 'content/login.js', onContentScriptLoaded),
-                // Wait till the "shared" content scripts have loaded before injecting login.js.
-                // TODO: figure out a better way to actually wait for scripts loading.
-                2000);
+            injectWithDependencies(tab.id, 'content/login.js', onContentScriptLoaded);
         });
 
         return this._promise;

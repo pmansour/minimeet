@@ -11,13 +11,31 @@ export function getTab(tabId) {
     });
 }
 
-/** Try to inject a script file into a given tab, then call the given callback. */
-export function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
+export const SHARED_INJECTION_SCRIPTS = [
+    'shared/config.js',
+    'shared/dom.js',
+    'shared/logging.js',
+    'shared/state.js'
+];
+
+export function injectWithDependencies(tabId, scriptFile, onSuccess = null) {
+    injectScripts(tabId, SHARED_INJECTION_SCRIPTS.concat([scriptFile]), onSuccess);
+}
+
+/** Injects the given script files into a given tab then calls the given callback. */
+export function injectScripts(tabId, scriptFiles, onSuccess = null) {
+    if (scriptFiles.length < 1) {
+        return;
+    }
     chrome.tabs.executeScript(tabId, {
-        file: scriptFile,
+        file: scriptFiles[0],
     }, () => {
         if (!chrome.runtime.lastError) {
-            info(`Injected '${scriptFile}' into tab '${tabId}'.`);
+            info(`Injected '${scriptFiles[0]}' into tab '${tabId}'.`);
+            if (scriptFiles.length > 1) {
+                injectScripts(tabId, scriptFiles.slice(1), onSuccess);
+                return;
+            }
             if (onSuccess) { onSuccess(); }
             return;
         }
@@ -30,9 +48,9 @@ export function injectScriptWithRetries(tabId, scriptFile, onSuccess = null) {
         }
 
         setTimeout(
-            injectScriptWithRetries,
+            injectScripts,
             retryTimeoutMilliseconds,
-            tabId, scriptFile, onSuccess);
+            tabId, scriptFiles, onSuccess);
     });
 }
 
