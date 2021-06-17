@@ -3,8 +3,8 @@ import { startMeetTab } from './meetings.js';
 
 async function main() {
     const creds = await fetch('http://localhost:8090/credentials').then(response => response.json());
-    const username = creds.username;
-    const password = creds.password;
+    const username = creds.googleAccount && creds.googleAccount.username;
+    const password = creds.googleAccount && creds.googleAccount.password;
     if (!username || !password) {
         error(`Could not find credentials. API responded with: '${JSON.stringify(creds)}'`);
         return;
