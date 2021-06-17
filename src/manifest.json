@@ -4,7 +4,8 @@
     "description": "Automatically join meetings on your calendar.",
     "permissions": [
         "https://meet.google.com/",
-        "https://accounts.google.com/"
+        "https://accounts.google.com/",
+        "http://localhost:8090/"
     ],
     "background": {
         "scripts": [
@@ -16,10 +17,4 @@
         "default_title": "Join the next meeting on your calendar."
     },
     "manifest_version": 2
-    // "content_scripts": [
-    //     {
-    //         "matches": ["https://accounts.google.com/*", "https://meet.google.com/*"],
-    //         "js": ["shared/config.js", "shared/dom.js", "shared/logging.js", "shared/state.js"]
-    //     }
-    // ]
 }
