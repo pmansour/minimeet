@@ -69,13 +69,21 @@ export class LoginFlow {
         // Log out before logging in to start with a flesh slate.
         chrome.tabs.create({ url: googleLogoutUrl }, (tab) => {
             this._tabId = tab.id;
+        });
+
+        const logoutInterval = setInterval(() => {
+            if (!this._tabId) {
+                return;
+            }
+            clearInterval(logoutInterval);
+
             chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect }, () => {
                 const onContentScriptLoaded = () => {
                     this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
                 };
                 injectWithDependencies(tab.id, 'content/login.js', onContentScriptLoaded);
-            });
-        });
+            });            
+        }, retryTimeoutMilliseconds);
 
         return this._promise;
     }
