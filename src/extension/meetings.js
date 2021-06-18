@@ -48,8 +48,6 @@ async function pollForNextMeeting(tabId) {
 
 /** Opens the Google Meet homepage and starts looking for the next meeting. */
 export async function startMeetTab(tabId) {
-    // TODO: figure out why this keeps getting blocked by CORS.
-    // await waitForOnlineAndReachable(meetBaseUrl);
     const onTabNavigation = (tab) => {
         const onContentScriptLoaded = () => pollForNextMeeting(tab.id);
         injectWithDependencies(tab.id, 'content/findMeeting.js', onContentScriptLoaded);
