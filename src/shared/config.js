@@ -10,3 +10,6 @@ const meetBaseUrl = 'https://meet.google.com';
 
 /** URL for signing in to Google. */
 const baseGoogleLoginUrl = 'https://accounts.google.com/signin/v2';
+
+/** URL for signing out of Google. */
+const googleLogoutUrl = 'https://www.google.com/accounts/Logout';
