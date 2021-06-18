@@ -53,7 +53,11 @@ export class LoginFlow {
         this._password = password;
     }
 
-    /** Opens the Google Accounts login page and starts trying to complete the sign-in flow. */
+    /**
+     * Opens the Google Accounts login page and starts trying
+     * to complete the sign-in flow. Returns a promise that
+     * resolves with the tab ID that's pointing at Google Meet.
+     */
     async start() {
         this._promise = new Promise((resolve, reject) => {
             this._resolve = resolve;
@@ -112,7 +116,7 @@ export class LoginFlow {
         clearInterval(this._pollId);
         info('Login flow is complete!');
         if (successful) {
-            this._resolve();
+            this._resolve(this._tabId);
         } else {
             this._reject();
         }

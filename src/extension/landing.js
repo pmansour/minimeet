@@ -12,12 +12,12 @@ async function main() {
     info(`Received credentials for account '${username}'.`);
 
     const loginFlow = new LoginFlow(username, password);
-    await loginFlow.start();
+    const tabId = await loginFlow.start();
 
     info('Control-flow returned to landing.js');
 
     // TODO: convert this to flow class as well.
-    await startMeetTab();
+    await startMeetTab(tabId);
 }
 
 main();

@@ -47,11 +47,17 @@ async function pollForNextMeeting(tabId) {
 }
 
 /** Opens the Google Meet homepage and starts looking for the next meeting. */
-export async function startMeetTab() {
+export async function startMeetTab(tabId) {
     // TODO: figure out why this keeps getting blocked by CORS.
     // await waitForOnlineAndReachable(meetBaseUrl);
-    chrome.tabs.create({ url: meetBaseUrl }, (tab) => {
+    const onTabNavigation = (tab) => {
         const onContentScriptLoaded = () => pollForNextMeeting(tab.id);
         injectWithDependencies(tab.id, 'content/findMeeting.js', onContentScriptLoaded);
-    });
+    };
+    // Re-use an existing tab, if there's one open.
+    if (tabId) {
+        chrome.tabs.update(tabId, { url: meetBaseUrl }, onTabNavigation);
+    } else {
+        chrome.tabs.create({ url: meetBaseUrl }, onTabNavigation);
+    }
 }
