@@ -81,16 +81,37 @@ export async function isOnlineAndReachable(url) {
 
 /** Executes the given callback when the device is online and the given URL is reachable. */
 export async function waitForOnlineAndReachable(url) {
-    return new Promise((resolve) => {
-        const checkReachability = async () => {
-            if (await isOnlineAndReachable(url)) {
-                info(`Device is online and '${url}' is reachable.`);
-                resolve();
-                return;
+    let isOnline = false;
+    return doUntil(
+        'waitForOnlineAndReachable',
+        async () => { isOnline = await isOnlineAndReachable(url); },
+        () => isOnline,
+        retryTimeoutMilliseconds);
+}
+
+/** Keeps executing the given action until the isDone function returns true. The action function will be executed at least once. */
+export function doUntil(label, action, isDone, timeoutMillseconds) {
+    // Default action to a no-op function.
+    label = label || 'Untitled';
+    return new Promise((resolve, reject) => {
+        const scheduledFn = () => {
+            try {
+                if (action) {
+                    debug(`[${label}] Executing action.`);
+                    action();
+                }
+                if (isDone()) {
+                    debug(`[${label}] Stopping condition is reached.`);
+                    resolve();
+                    return;
+                }
+                debug(`[${label}] Haven't reached stopping condition; retrying in ${timeoutMillseconds / 1000}s.`);
+                setTimeout(scheduledFn, timeoutMillseconds);
+            } catch (e) {
+                debug(`[${label}] Unexpected error: ${e}`);
+                reject(e);
             }
-            debug(`'${url}' is unreachable; waiting ${+((retryTimeoutMilliseconds / 1000).toFixed(2))} seconds before retrying..`);
-            setTimeout(checkReachability, retryTimeoutMilliseconds);
-        };
-        checkReachability();
+        }
+        scheduledFn();
     });
 }

@@ -1,4 +1,4 @@
-import { checkError, injectWithDependencies, getTab, sendMessage, waitForOnlineAndReachable } from './utils.js';
+import { checkError, injectWithDependencies, getTab, sendMessage, waitForOnlineAndReachable, doUntil } from './utils.js';
 
 async function getLoginState(tabId, email) {
     return new Promise(async (resolve, reject) => {
@@ -67,23 +67,24 @@ export class LoginFlow {
         await waitForOnlineAndReachable(baseGoogleLoginUrl);
         const loginUrlWithRedirect = `${baseGoogleLoginUrl}?continue=${encodeURIComponent(meetBaseUrl)}`
         // Log out before logging in to start with a flesh slate.
+        info('Logging out of any current sessions..');
         chrome.tabs.create({ url: googleLogoutUrl }, (tab) => {
             this._tabId = tab.id;
         });
+        await doUntil(
+            'Sign out of google',
+            null,
+            () => !!this._tabId,
+            retryTimeoutMilliseconds
+        );
 
-        const logoutInterval = setInterval(() => {
-            if (!this._tabId) {
-                return;
-            }
-            clearInterval(logoutInterval);
-
-            chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect }, () => {
-                const onContentScriptLoaded = () => {
-                    this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
-                };
-                injectWithDependencies(tab.id, 'content/login.js', onContentScriptLoaded);
-            });            
-        }, retryTimeoutMilliseconds);
+        info(`Redirecting tab '${this._tabId}' to the login URL.`);
+        chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect }, () => {
+            const onContentScriptLoaded = () => {
+                this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
+            };
+            injectWithDependencies(this._tabId, 'content/login.js', onContentScriptLoaded);
+        });            
 
         return this._promise;
     }
