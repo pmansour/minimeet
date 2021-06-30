@@ -1,6 +1,6 @@
 {
   "name": "minimeet",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Automatically join meetings on your calendar.",
   "scripts": {
     "clean": "rm -f *.crx *.pem *.zip",
