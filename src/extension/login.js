@@ -77,27 +77,33 @@ export class LoginFlow {
         await doUntil(
             'Sign out of google',
             null,
-            () => {
-                this.checkTabStatus();
-                return !!this._tabId && this._tabStatus === 'complete';
-            },
+            () => this.isTabReady(),
             retryTimeoutMilliseconds
         );
 
         info(`Redirecting tab '${this._tabId}' to the login URL.`);
-        chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect }, () => {
-            const onContentScriptLoaded = () => {
-                this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
-            };
-            injectWithDependencies(this._tabId, 'content/login.js', onContentScriptLoaded);
-        });            
-
+        chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect });
+        await doUntil(
+            `Navigate to '${loginUrlWithRedirect}'`,
+            null,
+            () => this.isTabReady(),
+            retryTimeoutMilliseconds
+        );
+        
+        const onContentScriptLoaded = () => {
+            this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
+        };
+        injectWithDependencies(this._tabId, 'content/login.js', onContentScriptLoaded);
+    
         return this._promise;
     }
 
-    checkTabStatus() {
-        if (!this._tabId || this._tabStatus === 'complete') {
-            return;
+    isTabReady() {
+        if (!this._tabId) {
+            return false;
+        }
+        if (this._tabStatus === 'complete') {
+            return true;
         }
 
         debug(`Polling status of tab '${this._tabId}'..`);
