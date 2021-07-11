@@ -72,11 +72,15 @@ export class LoginFlow {
         chrome.tabs.create({ url: googleLogoutUrl }, (tab) => {
             this._tabId = tab.id;
             this._tabStatus = tab.status;
+
         });
         await doUntil(
             'Sign out of google',
             null,
-            () => !!this._tabId && this._tabStatus === 'complete',
+            () => {
+                this.checkTabStatus();
+                return !!this._tabId && this._tabStatus === 'complete';
+            },
             retryTimeoutMilliseconds
         );
 
@@ -89,6 +93,17 @@ export class LoginFlow {
         });            
 
         return this._promise;
+    }
+
+    checkTabStatus() {
+        if (!this._tabId || this._tabStatus === 'complete') {
+            return;
+        }
+
+        debug(`Polling status of tab '${this._tabId}'..`);
+        chrome.tabs.get(this._tabId, (tab) => {
+            this._tabStatus = tab.status;
+        });
     }
 
     async pollLogin() {
