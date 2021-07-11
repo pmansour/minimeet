@@ -46,6 +46,7 @@ export class LoginFlow {
     _reject = null;
 
     _tabId = null;
+    _tabStatus = null;
     _pollId = null;
 
     constructor(email, password) {
@@ -70,11 +71,12 @@ export class LoginFlow {
         info('Logging out of any current sessions..');
         chrome.tabs.create({ url: googleLogoutUrl }, (tab) => {
             this._tabId = tab.id;
+            this._tabStatus = tab.status;
         });
         await doUntil(
             'Sign out of google',
             null,
-            () => !!this._tabId,
+            () => !!this._tabId && this._tabStatus === 'complete',
             retryTimeoutMilliseconds
         );
 
