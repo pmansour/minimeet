@@ -80,14 +80,14 @@ export class LoginFlow {
             retryTimeoutMilliseconds
         );
 
-        // info(`Redirecting tab '${this._tabId}' to the login URL.`);
-        // chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect });
-        // await doUntil(
-        //     `Navigate to '${loginUrlWithRedirect}'`,
-        //     null,
-        //     () => this.isTabReady(),
-        //     retryTimeoutMilliseconds
-        // );
+        info(`Redirecting tab '${this._tabId}' to the login URL.`);
+        chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect });
+        await doUntil(
+            `Navigate to '${loginUrlWithRedirect}'`,
+            null,
+            () => this.isTabReady(),
+            retryTimeoutMilliseconds
+        );
         
         const onContentScriptLoaded = () => {
             this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
