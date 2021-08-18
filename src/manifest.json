@@ -5,7 +5,8 @@
     "permissions": [
         "https://meet.google.com/",
         "https://accounts.google.com/",
-        "http://localhost:8090/"
+        "http://localhost:8090/",
+        "tabs"
     ],
     "background": {
         "scripts": [

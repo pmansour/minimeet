@@ -67,28 +67,36 @@ export class LoginFlow {
 
         await waitForOnlineAndReachable(baseGoogleLoginUrl);
         const loginUrlWithRedirect = `${baseGoogleLoginUrl}?continue=${encodeURIComponent(meetBaseUrl)}`
-        // Log out before logging in to start with a flesh slate.
-        info('Logging out of any current sessions..');
-        chrome.tabs.create({ url: googleLogoutUrl }, (tab) => {
+        info('Visiting login URL with redirect..');
+        chrome.tabs.create({ url: loginUrlWithRedirect }, (tab) => {
             this._tabId = tab.id;
             this._tabStatus = tab.status;
         });
         await doUntil(
-            'Sign out of google',
+            'Navigate to login page',
             null,
             () => this.isTabReady(),
             retryTimeoutMilliseconds
         );
 
-        info(`Redirecting tab '${this._tabId}' to the login URL.`);
-        chrome.tabs.update(this._tabId, { url: loginUrlWithRedirect });
-        await doUntil(
-            `Navigate to '${loginUrlWithRedirect}'`,
-            null,
-            () => this.isTabReady(),
+        let tabUrl = undefined;
+        await DoUntil(
+            'Find tab URL',
+            () => {
+                chrome.tabs.get(this._tabId, (tab) => {
+                    if (tab.status !== 'complete') return;
+                    tabUrl = tab.url;
+                });
+            },
+            () => !!tabUrl,
             retryTimeoutMilliseconds
         );
-        
+
+        // Login is not needed if we got redirected straight to Meets.
+        if (new URL(tabUrl).hostname === new URL(meetBaseUrl).hostname) {
+            return Promise.resolve(this._tabId);
+        }
+
         const onContentScriptLoaded = () => {
             this._pollId = setInterval(() => this.pollLogin(), loginPollTimeoutMillseconds);
         };
