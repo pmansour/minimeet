@@ -5,7 +5,7 @@ EXTENSION_APP_ID="inlcnegncobjeadgjlacjhkgdmoikncb"
 
 echo "Packaging extension.."
 TMP_ZIP_FILE="$(mktemp -d)/latest.zip"
-zip -r "$TMP_ZIP_FILE" src/
+pushd src/ && zip -r "$TMP_ZIP_FILE" * && popd
 
 echo "Uploading latest files.."
 gsutil cp "$TMP_ZIP_FILE" "gs://$PUBLIC_BUCKET_NAME/$EXTENSION_APP_ID/latest.zip"
