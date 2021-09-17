@@ -1,0 +1,26 @@
+{
+    "name": "MiniMeet",
+    "description": "Automatically join meetings on your calendar.",
+    "version": "1.1.0",
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://meet.google.com/",
+        "https://accounts.google.com/"
+    ],
+    "action": {},
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["scripts/*", "util/*"],
+            "matches": ["https://accounts.google.com/*"]
+        }
+    ],
+    "manifest_version": 3
+}
