@@ -18,8 +18,12 @@
     },
     "web_accessible_resources": [
         {
-            "resources": ["content/*", "services/*", "util/*"],
+            "resources": ["content/*", "services/*", "util/*", "config/creds.js"],
             "matches": ["https://accounts.google.com/*"]
+        },
+        {
+            "resources": ["content/*", "services/*", "util/*"],
+            "matches": ["https://meet.google.com/*"]
         }
     ],
     "manifest_version": 3
