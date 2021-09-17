@@ -14,12 +14,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     const url = new URL(tab.url);
     switch (url.hostname) {
         case 'accounts.google.com':
-            // await executeScripts(tabId, ['scripts/login.js']);
-            await executeModule(tabId, 'scripts/login.js');
+            await executeModule(tabId, 'content/login.js');
             break;
         case 'meet.google.com':
             // TODO: do something different based on if this is a specific meeting.
-            await executeModule(tabId, 'scripts/meet.js');
+            await executeModule(tabId, 'content/meet.js');
             break;
         default:
             console.log('Dont care about this site, ignoring..');
