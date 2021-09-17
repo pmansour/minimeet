@@ -22,8 +22,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             await chrome.tabs.update(tabId, { url: initialUrl });
             break;
         case 'meet.google.com':
-            // TODO: do something different based on if this is a specific meeting.
-            await executeModule(tabId, 'content/meet.js');
+            if (url.pathname === '/') {
+                // This is the base Meet page. Pick a meeting.
+                await executeModule(tabId, 'content/selectMeeting.js');
+            } else {
+                await executeModule(tabId, 'content/joinMeeting.js');
+            }
             break;
         default:
             console.log('Dont care about this site, ignoring..');
