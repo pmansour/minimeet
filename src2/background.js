@@ -1,5 +1,5 @@
 import { initialUrl } from '/constants.js';
-import { executeScripts, executeModule } from '/util/injection.js';
+import { executeModule } from '/util/injection.js';
 
 // Extension click navigates to meet URL.
 chrome.action.onClicked.addListener((tab) => {
@@ -19,7 +19,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             break;
         case 'meet.google.com':
             // TODO: do something different based on if this is a specific meeting.
-            await executeScripts(tabId, ['scripts/meet.js']);
+            await executeModule(tabId, 'scripts/meet.js');
             break;
         default:
             console.log('Dont care about this site, ignoring..');

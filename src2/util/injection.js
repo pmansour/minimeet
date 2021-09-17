@@ -1,21 +1,3 @@
-import { debug, info } from './logging.js';
-
-// /**
-//  * Execute a given set of files into the tab with the given ID.
-//  * @param {*} tabId The tab in which to inject the scripts.
-//  * @param {*} files The file names of the scripts to inject.
-//  * @returns Promise that resolves when all scripts have executed.
-//  */
-// export function executeScripts(tabId, files) {
-//     return Promise.all(files.map((file) => {
-//         debug(`Injecting '${file}' into tab '${tabId}'.`);
-//         return chrome.scripting.executeScript({
-//             target: { tabId },
-//             files: [file],
-//         });
-//     }));
-// }
-
 /**
  * Inject the given filename as a module in the tab with the given ID.
  * @param {*} tabId The tab in which to inject the module.
@@ -24,10 +6,18 @@ import { debug, info } from './logging.js';
  */
 export function executeModule(tabId, filename) {
     const moduleLoader = (filename) => {
+        const elementId = `minimeet_${filename.replace(/\W/g, '_')}`;
+        if (!!document.getElementById(elementId)) {
+            // Already injected, stop here.
+            console.debug(`Module '${elementId}' already injected; exiting module loader..`);
+            return;
+        }
         const script = document.createElement('script');
         script.setAttribute('type', 'module');
         script.setAttribute('src', filename);
+        script.id = elementId;
         document.head.insertBefore(script, document.head.lastChild);
+        console.info(`Successfully injected module '${elementId}'.`);
     }
     return chrome.scripting.executeScript({
         target: { tabId },
