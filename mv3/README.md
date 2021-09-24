@@ -1,0 +1,1 @@
+Minimeet extension for Chrome extension manifest version 3. Requires Chromium 88+, which is not yet available on the Raspberry Pi OS fork of Chromium.
