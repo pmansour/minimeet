@@ -6,7 +6,3 @@ const baseGoogleLoginUrl = 'https://accounts.google.com/signin/v2';
 
 /** URL to initially go to Google. */
 export const initialUrl = `${baseGoogleLoginUrl}?continue=${encodeURIComponent(meetBaseUrl)}`;
-// export const initialUrl = `${baseGoogleLoginUrl}/identifier?continue=${encodeURIComponent(meetBaseUrl)}&flowName=GlifWebSignIn&flowEntry=ServiceLogin`;
-
-/** URL for signing out of Google. */
-const googleLogoutUrl = 'https://www.google.com/accounts/Logout';
