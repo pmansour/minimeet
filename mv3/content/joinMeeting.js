@@ -12,5 +12,4 @@ function joinMeeting() {
 }
 
 setInterval(joinMeeting, 2000);
-// In case we get stuck.
-setInterval(() => window.location.reload(), 60000);
+
