@@ -17,8 +17,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             await executeModule(tabId, 'content/login.js');
             break;
         case 'myaccount.google.com':
-            // This is where you get redirected after a successful login without a Meet redirect URL.
-            // Go back to the initial URL to either complete the login or go to Meet.
+        case 'apps.google.com':
+            // If we somehow end up redirected here, let's go back to the login flow.
             await chrome.tabs.update(tabId, { url: initialUrl });
             break;
         case 'meet.google.com':
