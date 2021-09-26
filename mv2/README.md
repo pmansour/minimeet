@@ -1,1 +1,1 @@
-Minimeet extension for Chrome extension manifest version 2, which is deprecated but works on Chromium pre-88, which is the only Chromium officially available for Raspberry PI OS as of today.
+Minimeet extension for Chrome extension manifest version 2, which is deprecated but works on Chromium pre-88. This version is no longer actively maintained.
