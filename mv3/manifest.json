@@ -22,7 +22,7 @@
             "matches": ["https://accounts.google.com/*"]
         },
         {
-            "resources": ["content/*", "services/*", "util/*", "constants.js"],
+            "resources": ["content/*", "services/*", "util/*"],
             "matches": ["https://meet.google.com/*"]
         }
     ],

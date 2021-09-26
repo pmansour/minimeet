@@ -1,9 +1,9 @@
-import { initialUrl } from '/constants.js';
 import { executeModule } from '/util/injection.js';
+import { getLoginRedirectUrl, meetBaseUrl } from '/util/url.js';
 
 // Extension click navigates to meet URL.
 chrome.action.onClicked.addListener((tab) => {
-    chrome.tabs.update(tab.id, { url: initialUrl });
+    chrome.tabs.update(tab.id, { url: getLoginRedirectUrl(meetBaseUrl) });
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
@@ -19,7 +19,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         case 'myaccount.google.com':
         case 'apps.google.com':
             // If we somehow end up redirected here, let's go back to the login flow.
-            await chrome.tabs.update(tabId, { url: initialUrl });
+            await chrome.tabs.update(tabId, { url: getLoginRedirectUrl(meetBaseUrl) });
             break;
         case 'meet.google.com':
             if (url.pathname === '/') {
