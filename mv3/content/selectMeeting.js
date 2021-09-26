@@ -3,21 +3,26 @@
  */
 
 import { getElement, bySelector, byVisibleSelfText } from '/util/dom.js';
-import { initialUrl } from '/constants.js';
+import { info } from '/util/logging.js';
+import { getLoginRedirectUrl, meetBaseUrl, navigateToUrl } from '/util/url.js';
 
 function isLoggedOut() {
     return !!getElement(byVisibleSelfText('Sign up for free'));
 }
 
 function goToLoginPage() {
-    window.location.href = initialUrl;
+    window.location.href = getLoginRedirectUrl(meetBaseUrl);
 }
 
 function selectMeeting() {
     const meeting = getElement(bySelector('[data-call-id]'));
-    if (meeting) {
-        meeting.click();
+    if (!meeting) {
+        return;
     }
+    const meetingId = meeting.dataset['callId'];
+    info(`Attempting to join meeting '${meetingId}'.`);
+    const meetingUrl = `${meetBaseUrl}/${meetingId}`;
+    navigateToUrl(getLoginRedirectUrl(meetingUrl));
 }
 
 setInterval(() => {
@@ -29,4 +34,4 @@ setInterval(() => {
     selectMeeting();
 }, 2000);
 // Refresh periodically, in case we get stuck.
-setInterval(goToLoginPage, 60000);
+setInterval(goToLoginPage, 30000);
