@@ -1,0 +1,26 @@
+{
+  "name": "minimeet",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Chrome extension that logs in to an account with the configured credentials and joins the next Google Meet meeting",
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "^3.9.0"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmansour/minimeet.git"
+  },
+  "keywords": [
+    "minimeet"
+  ],
+  "author": "pmansour",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pmansour/minimeet/issues"
+  },
+  "homepage": "https://github.com/pmansour/minimeet#readme"
+}
