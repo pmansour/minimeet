@@ -1,6 +1,6 @@
 import * as creds from '/config/creds.js';
-import { getLoginState, LOGIN_STATE, clickProfileIdentifier, clickSwitchAccount, clickUseAnotherAccount, enterEmail, enterPassword } from '../services/login.js';
-import { info, debug } from '/util/logging.js';
+import { getLoginState, LOGIN_STATE, clickProfileIdentifier, clickSwitchAccount, clickUseAnotherAccount, enterEmail, enterPassword } from '/src/services/login.js';
+import { info, debug } from '/src/util/logging.js';
 
 info('Hello from the login script!');
 

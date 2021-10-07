@@ -1,4 +1,4 @@
-import { info } from '/util/logging.js';
+import { info } from '/src/util/logging.js';
 
 /** URL for signing in to Google. */
 const baseGoogleLoginUrl = 'https://accounts.google.com/signin/v2';

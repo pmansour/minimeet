@@ -1,5 +1,5 @@
-import { executeModule } from '/util/injection.js';
-import { getLoginRedirectUrl, meetBaseUrl } from '/util/url.js';
+import { executeModule } from '/src/util/injection.js';
+import { getLoginRedirectUrl, meetBaseUrl } from '/src/util/url.js';
 
 // Extension click navigates to meet URL.
 chrome.action.onClicked.addListener((tab) => {

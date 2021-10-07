@@ -1,4 +1,4 @@
-import { fillInput, getElement, byVisibleSelfText, bySelector, byButtonText, byAriaLabel } from '/util/dom.js';
+import { fillInput, getElement, byVisibleSelfText, bySelector, byButtonText, byAriaLabel } from '/src/util/dom.js';
 
 /* The states of the login process. */
 export const LOGIN_STATE = Object.freeze({

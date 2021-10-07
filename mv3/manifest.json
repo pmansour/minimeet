@@ -13,16 +13,16 @@
     ],
     "action": {},
     "background": {
-        "service_worker": "background.js",
+        "service_worker": "src/background.js",
         "type": "module"
     },
     "web_accessible_resources": [
         {
-            "resources": ["content/*", "services/*", "util/*", "config/creds.js"],
+            "resources": ["src/*", "config/creds.js"],
             "matches": ["https://accounts.google.com/*"]
         },
         {
-            "resources": ["content/*", "services/*", "util/*"],
+            "resources": ["src/*"],
             "matches": ["https://meet.google.com/*"]
         }
     ],

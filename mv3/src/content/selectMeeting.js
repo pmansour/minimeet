@@ -2,9 +2,9 @@
  * Runs on the Google Meets homepage and tries to join the next meeting, if one exists.
  */
 
-import { getElement, bySelector, byVisibleSelfText } from '/util/dom.js';
-import { info } from '/util/logging.js';
-import { getLoginRedirectUrl, meetBaseUrl, navigateToUrl } from '/util/url.js';
+import { getElement, bySelector, byVisibleSelfText } from '/src/util/dom.js';
+import { info } from '/src/util/logging.js';
+import { getLoginRedirectUrl, meetBaseUrl, navigateToUrl } from '/src/util/url.js';
 
 function isLoggedOut() {
     return !!getElement(byVisibleSelfText('Sign up for free'));
