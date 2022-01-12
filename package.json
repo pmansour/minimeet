@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Chrome extension that logs in to an account with the configured credentials and joins the next Google Meet meeting",
-  "dependencies": {},
   "devDependencies": {
-    "jasmine": "^3.9.0"
+    "chromedriver": "^94.0.0",
+    "jasmine": "^3.9.0",
+    "jasmine-browser-runner": "^0.9.0"
   },
   "scripts": {
-    "test": "node_modules/.bin/jasmine"
+    "test": "npx jasmine-browser-runner runSpecs"
   },
   "repository": {
     "type": "git",
