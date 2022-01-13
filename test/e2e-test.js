@@ -4,11 +4,8 @@ const path = require('path');
 const assert = require('assert');
 
 function getTestCreds() {
-    // Use real creds here when running this test.
-    return {
-        username: 'test-job@example.com',
-        password: '<real-password-goes-here>',
-    };
+    const testCredsFilePath = path.join(__dirname, 'test-creds.json');;
+    return JSON.parse(fs.readFileSync(testCredsFilePath));
 }
 
 function WaitForLoggedIn(page, timeout = 20 * 1000) {
