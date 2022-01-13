@@ -111,3 +111,6 @@ bin/
 *.crx
 *.pem
 *.zip
+
+# Don't commit credentials.
+test-creds.json
