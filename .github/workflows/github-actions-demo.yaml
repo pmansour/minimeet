@@ -24,3 +24,8 @@ jobs:
           node-version: '16'
       - run: npm ci
       - run: npm test
+  list-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ls $HOME/secrets
