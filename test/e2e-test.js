@@ -32,6 +32,7 @@ describe('minimeet extension', async function() {
 
     before('Initialize creds file', async function() {
         creds = getTestCreds();
+        fs.mkdirSync(path.dirname(credsFilePath), { recursive: true });
         fs.writeFileSync(credsFilePath, `
 export const EMAIL_ADDRESS = '${creds.username}';
 export const PASSWORD = '${creds.password}';
