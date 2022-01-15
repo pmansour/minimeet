@@ -34,3 +34,4 @@ jobs:
           SUPER_SECRET: ${{secrets.GOOGLE_USERNAME }}
         run: |
           echo "$SUPER_SECRET"
+          ls $HOME/secrets
