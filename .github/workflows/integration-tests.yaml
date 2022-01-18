@@ -1,5 +1,10 @@
 name: Integration tests
-on: [push]
+# Run on any push to any branch, on any PR, and every 12 hours.
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 */12 * * *'
 jobs:
   run-e2e-test:
     environment: test
