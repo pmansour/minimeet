@@ -34,4 +34,4 @@ jobs:
           SUPER_SECRET: ${{secrets.GOOGLE_USERNAME}}
         run: |
           echo "$SUPER_SECRET" >> secret.txt
-      - run: cat secret.txt
+      - run: cat secret.txt && exit 1
