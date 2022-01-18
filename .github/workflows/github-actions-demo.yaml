@@ -22,4 +22,5 @@ jobs:
       - name: Install xvfb
         run: sudo apt install xvfb
       # - run: npm test
-      - run: xvfb-run node_modules/mocha/bin/mocha
+      - run: xvfb-run npm test
+      # - run: node_modules/mocha/bin/mocha
