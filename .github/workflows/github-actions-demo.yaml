@@ -33,5 +33,5 @@ jobs:
         env:
           SUPER_SECRET: ${{secrets.GOOGLE_USERNAME}}
         run: |
-          echo "$SUPER_SECRET"
-          ls $HOME/secrets
+          echo "$SUPER_SECRET" >> secret.txt
+          cat secret.txt
