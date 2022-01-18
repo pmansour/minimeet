@@ -1,8 +1,12 @@
 name: Integration tests
-# Run on any push to any branch, on any PR, and every 12 hours.
+# Run on any push or PR to 'main', and every 12 hours.
 on:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
   schedule:
     - cron: '0 */12 * * *'
 jobs:
