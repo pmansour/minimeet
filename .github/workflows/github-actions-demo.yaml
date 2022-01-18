@@ -24,7 +24,6 @@ jobs:
   #         node-version: '16'
   #     - run: npm ci
   #     - run: npm test
-  
   list-secrets:
     environment: test
     runs-on: ubuntu-latest
@@ -35,4 +34,4 @@ jobs:
           SUPER_SECRET: ${{secrets.GOOGLE_USERNAME}}
         run: |
           echo "$SUPER_SECRET" >> secret.txt
-          cat secret.txt
+      - run: cat secret.txt
