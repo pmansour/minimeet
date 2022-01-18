@@ -1,4 +1,9 @@
 const puppeteer = require('puppeteer');
+<<<<<<< HEAD
+
+
+let browser = puppeteer.launch({ headless: false });
+=======
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
@@ -77,3 +82,4 @@ export const PASSWORD = '${creds.password}';
         xit('should join a meeting created after it loads', function() {});
     });
 });
+>>>>>>> ef1e845832eaf10dce5f909da91cbe27b55b4fbb
