@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Integration tests
 on: [push]
 jobs:
   run-e2e-test:
@@ -19,4 +19,7 @@ jobs:
             "password": "%s"
           }' "$GOOGLE_USERNAME" "$GOOGLE_PASSWORD" > test/test-creds.json
       - run: npm ci
-      - run: npm test
+      - name: Install xvfb
+        run: sudo apt install xvfb
+      # - run: npm test
+      - run: xvfb-run node_modules/mocha/bin/mocha
