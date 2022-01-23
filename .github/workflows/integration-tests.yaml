@@ -1,5 +1,5 @@
 name: Integration tests
-# Run on any push or PR to 'main', and every 12 hours.
+# Run on any push or PR to 'main', and once a day.
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '30 11 * * *'
 jobs:
   run-e2e-test:
     environment: test
