@@ -17,6 +17,19 @@ function WaitForLoggedIn(page, timeout = 20 * 1000) {
         });
 }
 
+async function WaitForInMeeting(page, title, timeout = 20 * 1000) {
+    await page.waitForSelector(
+        '*[data-meeting-title="' + title + '"]',
+        {
+            timeout,
+        });
+    await page.waitForSelector(
+        '*[data-in-call="true"]',
+        {
+            timeout,
+        });
+}
+
 async function IsLoggedInAs(page, email) {
     return (await page.content()).match(email);
 }
@@ -44,6 +57,7 @@ export const PASSWORD = '${creds.password}';
     });
 
     beforeEach('Start browser', async function() {
+        this.timeout(20 * 1000);
         this.browser = await puppeteer.launch({
             headless: false,
             args: [
@@ -51,13 +65,13 @@ export const PASSWORD = '${creds.password}';
                 `--load-extension=${extensionPath}`,
             ]
         });
-        return Promise.resolve();
     });
 
     afterEach('Close browser', async function() {
+        this.timeout(20 * 1000);
+
         await this.browser.close();
-        return Promise.resolve();
-    })
+    });
 
     it('Logs in successfully', async function() {
         this.timeout(30 * 1000);
@@ -77,5 +91,16 @@ export const PASSWORD = '${creds.password}';
         xit('should join an existing meeting starting in the near future', function() {});
         xit('should join an existing meeting that started in the recent past', function() {});
         xit('should join a meeting created after it loads', function() {});
+
+        it('should join a static daily meeting on the test user\'s calendar', async function() {
+            this.timeout(30 * 1000);
+
+            const page = await this.browser.newPage();
+            await page.goto('https://meet.google.com');
+
+            // Meeting title of the recurring meeting that should exist on the test user's calendar.
+            const DAILY_TEST_MEETING_TITLE = "Daily test meeting";
+            await WaitForInMeeting(page, /*title=*/DAILY_TEST_MEETING_TITLE, /*timeout=*/20*1000);
+        });
     });
 });
