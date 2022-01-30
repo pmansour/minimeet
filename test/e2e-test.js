@@ -51,10 +51,12 @@ export const PASSWORD = '${creds.password}';
                 `--load-extension=${extensionPath}`,
             ]
         });
+        return Promise.resolve();
     });
 
     afterEach('Close browser', async function() {
         await this.browser.close();
+        return Promise.resolve();
     })
 
     it('Logs in successfully', async function() {
