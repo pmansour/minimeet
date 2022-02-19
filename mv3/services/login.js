@@ -8,6 +8,7 @@ export const LOGIN_STATE = Object.freeze({
     ENTER_EMAIL: 3,
     ENTER_PASSWORD_SAME_ACCOUNT: 4,
     ENTER_PASSWORD_WRONG_ACCOUNT: 5,
+    INFO_MESSAGE_NO_INPUT: 6,
 });
 
 /**
@@ -33,6 +34,10 @@ export const LOGIN_STATE = Object.freeze({
             return LOGIN_STATE.ENTER_PASSWORD_WRONG_ACCOUNT;
         }
     }
+    // Happens periodically when you're logged in but from a new IP or something.
+    if (getElement(byVisibleSelfText("Verify it's you"))) {
+        return LOGIN_STATE.INFO_MESSAGE_NO_INPUT;
+    }
     return LOGIN_STATE.UNKNOWN;
 }
 
@@ -56,4 +61,8 @@ export function enterPassword(password) {
 
 export function clickSwitchAccount() {
     getElement(byAriaLabel('Switch account')).click();
+}
+
+export function clickNext() {
+    getElement(byButtonText('Next')).click();
 }
