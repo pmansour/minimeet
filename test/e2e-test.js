@@ -10,7 +10,7 @@ function getTestCreds() {
 
 function WaitForLoggedIn(page, timeout = 20 * 1000) {
     return page.waitForSelector(
-        '*[aria-label="Account Information"]',
+        '*[aria-label*="Google Account:"]',
         {
             hidden: false,
             timeout,
