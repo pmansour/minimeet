@@ -8,7 +8,7 @@ function getTestCreds() {
     return JSON.parse(fs.readFileSync(testCredsFilePath));
 }
 
-function WaitForLoggedIn(page, timeout = 20 * 1000) {
+function WaitForLoggedIn(page, timeout = 30 * 1000) {
     return page.waitForSelector(
         '*[aria-label*="Google Account:"]',
         {
@@ -17,7 +17,7 @@ function WaitForLoggedIn(page, timeout = 20 * 1000) {
         });
 }
 
-async function WaitForInMeeting(page, title, timeout = 20 * 1000) {
+async function WaitForInMeeting(page, title, timeout = 30 * 1000) {
     await page.waitForSelector(
         '*[data-meeting-title="' + title + '"]',
         {
@@ -100,7 +100,7 @@ export const PASSWORD = '${creds.password}';
 
             // Meeting title of the recurring meeting that should exist on the test user's calendar.
             const DAILY_TEST_MEETING_TITLE = "Daily test meeting";
-            await WaitForInMeeting(page, /*title=*/DAILY_TEST_MEETING_TITLE, /*timeout=*/20*1000);
+            await WaitForInMeeting(page, /*title=*/DAILY_TEST_MEETING_TITLE, /*timeout=*/30*1000);
         });
     });
 });
