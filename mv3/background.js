@@ -34,3 +34,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             break;
     }
 });
+
+// Explicitly allow Google sites (in particular, Meet) to use necessary permissions.
+const allowedSiteSettings = [chrome.contentSettings.notificatoins, chrome.contentSettings.camera, chrome.contentSettings.microphone];
+allowedSiteSettings.forEach((setting) => {
+    setting.set({
+        primaryPattern: 'https://*.google.com/*',
+        setting: 'allow',
+    });
+});
