@@ -1,6 +1,17 @@
 import { executeModule } from '/util/injection.js';
 import { getLoginRedirectUrl, meetBaseUrl } from '/util/url.js';
 
+// Adds the necessary content settings for Google sites (e.g. Meets).
+function addGoogleContentSettings() {
+    const allowedSettings = [chrome.contentSettings.notifications, chrome.contentSettings.camera, chrome.contentSettings.microphone];
+    allowedSettings.forEach((setting) => {
+        setting.set({
+            primaryPattern: 'https://*.google.com/*',
+            setting: 'allow',
+        });
+    });
+}
+
 // Extension click navigates to meet URL.
 chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.update(tab.id, { url: getLoginRedirectUrl(meetBaseUrl) });
@@ -22,6 +33,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             await chrome.tabs.update(tabId, { url: getLoginRedirectUrl(meetBaseUrl) });
             break;
         case 'meet.google.com':
+            addGoogleContentSettings();
             if (url.pathname === '/') {
                 // This is the base Meet page. Pick a meeting.
                 await executeModule(tabId, 'content/selectMeeting.js');
@@ -33,13 +45,4 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             console.log('Dont care about this site, ignoring..');
             break;
     }
-});
-
-// Explicitly allow Google sites (in particular, Meet) to use necessary permissions.
-const allowedSiteSettings = [chrome.contentSettings.notifications, chrome.contentSettings.camera, chrome.contentSettings.microphone];
-allowedSiteSettings.forEach((setting) => {
-    setting.set({
-        primaryPattern: 'https://*.google.com/*',
-        setting: 'allow',
-    });
 });
