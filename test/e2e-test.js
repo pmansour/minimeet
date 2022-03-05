@@ -73,7 +73,7 @@ export const PASSWORD = '${creds.password}';
         await this.browser.close();
     });
 
-    it('Logs in successfully', async function() {
+    it('Logs in successfully', async function(done) {
         this.timeout(30 * 1000);
 
         const page = await this.browser.newPage();
@@ -84,6 +84,8 @@ export const PASSWORD = '${creds.password}';
         assert.ok(
             await IsLoggedInAs(page, expectedUsername),
             `Page is not logged in as account '${expectedUsername}'.`);
+
+        done();
     });
 
     describe('with meetings', function() {
@@ -92,7 +94,7 @@ export const PASSWORD = '${creds.password}';
         // xit('should join an existing meeting that started in the recent past', function() {});
         // xit('should join a meeting created after it loads', function() {});
 
-        it('should join a static daily meeting on the test user\'s calendar', async function() {
+        it('should join a static daily meeting on the test user\'s calendar', async function(done) {
             this.timeout(30 * 1000);
 
             const page = await this.browser.newPage();
@@ -101,6 +103,8 @@ export const PASSWORD = '${creds.password}';
             // Meeting title of the recurring meeting that should exist on the test user's calendar.
             const DAILY_TEST_MEETING_TITLE = "Daily test meeting";
             await WaitForInMeeting(page, /*title=*/DAILY_TEST_MEETING_TITLE, /*timeout=*/30*1000);
+
+            done();
         });
     });
 });
