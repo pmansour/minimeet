@@ -56,7 +56,7 @@ export const PASSWORD = '${creds.password}';
         fs.rmSync(credsFilePath);
     });
 
-    beforeEach('Start browser', async function() {
+    beforeEach('Start browser', async function(done) {
         this.timeout(20 * 1000);
         this.browser = await puppeteer.launch({
             headless: false,
@@ -65,12 +65,16 @@ export const PASSWORD = '${creds.password}';
                 `--load-extension=${extensionPath}`,
             ]
         });
+
+        done();
     });
 
-    afterEach('Close browser', async function() {
+    afterEach('Close browser', function(done) {
         this.timeout(20 * 1000);
 
         await this.browser.close();
+
+        done();
     });
 
     it('Logs in successfully', async function(done) {
