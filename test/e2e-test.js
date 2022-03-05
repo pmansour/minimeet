@@ -87,10 +87,10 @@ export const PASSWORD = '${creds.password}';
     });
 
     describe('with meetings', function() {
-        // TODO: implement these.
-        xit('should join an existing meeting starting in the near future', function() {});
-        xit('should join an existing meeting that started in the recent past', function() {});
-        xit('should join a meeting created after it loads', function() {});
+        // // TODO: implement these.
+        // xit('should join an existing meeting starting in the near future', function() {});
+        // xit('should join an existing meeting that started in the recent past', function() {});
+        // xit('should join a meeting created after it loads', function() {});
 
         it('should join a static daily meeting on the test user\'s calendar', async function() {
             this.timeout(30 * 1000);
