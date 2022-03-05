@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   # TODO(pmansour): re-enable this after the relevant issue is resolved.
   # https://github.com/pmansour/minimeet/issues/5
   # schedule:
