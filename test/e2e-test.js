@@ -42,7 +42,6 @@ async function createMeeting(username, password, time) {
 describe('minimeet extension', function() {
     const extensionPath = path.join(__dirname, '../mv3');
     const credsFilePath = `${extensionPath}/config/creds.js`;
-    this.timeout(0); // Disable timeouts for this entire suite.
 
     before('Initialize creds file', function() {
         creds = getTestCreds();
@@ -58,6 +57,7 @@ export const PASSWORD = '${creds.password}';
     });
 
     beforeEach('Start browser', async function() {
+        this.timeout(20 * 1000);
         this.browser = await puppeteer.launch({
             headless: false,
             args: [
@@ -68,10 +68,13 @@ export const PASSWORD = '${creds.password}';
     });
 
     afterEach('Close browser', async function() {
+        this.timeout(20 * 1000);
         await this.browser.close();
     });
 
     it('Logs in successfully', async function() {
+        this.timeout(30 * 1000);
+
         const page = await this.browser.newPage();
         await page.goto('https://meet.google.com');
 
@@ -89,6 +92,8 @@ export const PASSWORD = '${creds.password}';
         // xit('should join a meeting created after it loads', function() {});
 
         it('should join a static daily meeting on the test user\'s calendar', async function() {
+            this.timeout(40 * 1000);
+
             const page = await this.browser.newPage();
             await page.goto('https://meet.google.com');
 
