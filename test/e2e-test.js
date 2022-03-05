@@ -39,11 +39,11 @@ async function IsLoggedInAs(page, email) {
 async function createMeeting(username, password, time) {
 }
 
-describe('minimeet extension', async function() {
+describe('minimeet extension', function() {
     const extensionPath = path.join(__dirname, '../mv3');
     const credsFilePath = `${extensionPath}/config/creds.js`;
 
-    before('Initialize creds file', async function() {
+    before('Initialize creds file', function() {
         creds = getTestCreds();
         fs.mkdirSync(path.dirname(credsFilePath), { recursive: true });
         fs.writeFileSync(credsFilePath, `
@@ -52,7 +52,7 @@ export const PASSWORD = '${creds.password}';
 `);
     });
 
-    after('Delete creds file', async function() {
+    after('Delete creds file', function() {
         fs.rmSync(credsFilePath);
     });
 
