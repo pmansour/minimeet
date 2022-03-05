@@ -69,7 +69,7 @@ export const PASSWORD = '${creds.password}';
         done();
     });
 
-    afterEach('Close browser', function(done) {
+    afterEach('Close browser', async function(done) {
         this.timeout(20 * 1000);
 
         await this.browser.close();
