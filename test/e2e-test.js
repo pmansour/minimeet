@@ -69,7 +69,6 @@ export const PASSWORD = '${creds.password}';
 
     afterEach('Close browser', async function() {
         this.timeout(20 * 1000);
-
         await this.browser.close();
     });
 
@@ -93,7 +92,7 @@ export const PASSWORD = '${creds.password}';
         xit('should join a meeting created after it loads', function() {});
 
         it('should join a static daily meeting on the test user\'s calendar', async function() {
-            this.timeout(30 * 1000);
+            this.timeout(40 * 1000);
 
             const page = await this.browser.newPage();
             await page.goto('https://meet.google.com');
