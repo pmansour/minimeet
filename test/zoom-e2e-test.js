@@ -2,12 +2,9 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const assert = require('assert');
 
-async function WaitForInMeeting(page, timeout = 60 * 1000) {
-    await page.waitForFunction(
-        function() {
-            const endCallBtn = Array.from(document.querySelectorAll('button')).filter((btn) => btn.innerText.match('End'));
-            return !endCallBtn;
-        },
+async function WaitForInMeeting(page, timeout = 30 * 1000) {
+    await page.waitForSelector(
+        '.meeting-app',
         {
             timeout,
         });
