@@ -10,7 +10,8 @@
     ],
     "host_permissions": [
         "https://meet.google.com/",
-        "https://accounts.google.com/"
+        "https://accounts.google.com/",
+        "https://zoom.us/"
     ],
     "action": {},
     "background": {
@@ -24,7 +25,7 @@
         },
         {
             "resources": ["content/*", "services/*", "util/*"],
-            "matches": ["https://meet.google.com/*"]
+            "matches": ["https://meet.google.com/*", "https://zoom.us/*"]
         }
     ],
     "manifest_version": 3
