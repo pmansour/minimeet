@@ -1,12 +1,12 @@
 import { executeModule } from '/util/injection.js';
 import { getLoginRedirectUrl, meetBaseUrl } from '/util/url.js';
 
-// Adds the necessary content settings for Google sites (e.g. Meets).
-function addGoogleContentSettings() {
+// Adds the necessary content settings for sites that do meetings (e.g. Google Meets, Zoom).
+function addMeetingContentSettings(siteUrlPattern) {
     const allowedSettings = [chrome.contentSettings.notifications, chrome.contentSettings.camera, chrome.contentSettings.microphone];
     allowedSettings.forEach((setting) => {
         setting.set({
-            primaryPattern: 'https://*.google.com/*',
+            primaryPattern: siteUrlPattern,
             setting: 'allow',
         });
     });
@@ -33,7 +33,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             await chrome.tabs.update(tabId, { url: getLoginRedirectUrl(meetBaseUrl) });
             break;
         case 'meet.google.com':
-            addGoogleContentSettings();
+            addMeetingContentSettings('https://*.google.com/*');
             if (url.pathname === '/') {
                 // This is the base Meet page. Pick a meeting.
                 await executeModule(tabId, 'content/selectMeeting.js');
@@ -42,6 +42,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             }
             break;
         default:
+            if (hostname.match('.*.zoom.us')) {
+                addMeetingContentSettings('https://*.zoom.us/*');
+                if (url.pathname.match('\/wc\/join\/')) {
+                    await executeModule(tabId, 'content/joinZoomMeeting.js');
+                }
+                break;
+            }
             console.log('Dont care about this site, ignoring..');
             break;
     }
