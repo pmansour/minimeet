@@ -42,7 +42,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             }
             break;
         default:
-            if (hostname.match('.*.zoom.us')) {
+            if (url.hostname.match('zoom.us')) {
                 addMeetingContentSettings('https://*.zoom.us/*');
                 if (url.pathname.match('\/wc\/join\/')) {
                     await executeModule(tabId, 'content/joinZoomMeeting.js');
