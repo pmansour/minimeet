@@ -34,7 +34,15 @@ function joinMeeting() {
     }
 }
 
+function closeCookieModal() {
+    const btn = getElement(bySelector('*[aria-label=Privacy] button[aria-label=Close]'));
+    if (btn) {
+        btn.click();
+    }
+}
+
 setInterval(() => {
+    closeCookieModal();
     unmuteAudio();
     startVideo();
     enterRoomName();
