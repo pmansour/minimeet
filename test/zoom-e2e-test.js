@@ -8,14 +8,6 @@ function getZoomConfig() {
     return JSON.parse(fs.readFileSync(zoomConfigFilePath));
 }
 
-async function WaitForInMeeting(page, timeout = 30 * 1000) {
-    await page.waitForSelector(
-        '.meeting-app',
-        {
-            timeout,
-        });
-}
-
 function delay(timeoutMs) {
     return new Promise((resolve) => {
         setTimeout(resolve, timeoutMs);
@@ -46,19 +38,25 @@ describe('minimeet extension', function() {
         await this.page.goto(this.zoomConfig.testMeetingUrl);
     });
 
-    it('joins successfully', async function() {
-        await WaitForInMeeting(this.page);
+    it('joins the meeting', async function() {
+        await this.page.waitForSelector('.meeting-app', { timeout: 10 * 1000 });
         assert.equal(await this.page.title(), this.zoomConfig.testMeetingTitle);
     });
-
-    xit('inserts room name successfully', function() {});
-    it('unmutes successfully', async function() {
-        await this.page.waitForSelector('*[arialabel="mute my microphone"]', { timeout: 20 * 1000 });
+    it('uses "Meeting room" as username', async function() {
+        await this.page.waitForFunction(() => !!MeetingConfig, { timeout: 10 * 1000 });
+        assert.equal(await this.page.evaluate('MeetingConfig.userName'), 'Meeting room');
     });
-    xit('starts video successfully', function() {});
+    it('unmutes the microphone', async function() {
+        await this.page.waitForSelector('*[arialabel="mute my microphone"]', { timeout: 30 * 1000 });
+    });
+    it('starts video', async function() {
+        await this.page.waitForSelector('*[arialabel="stop sending my video"]', { timeout: 30 * 1000 });
+    });
 
-    it('sticks around', async function() {
-        await delay(1 * 1000);
+    // This is useful for debugging UI test issues. Remove the 'x' to run this locally.
+    // Avoid committing the enabled version of this test so we don't waste GH action time.
+    xit('gives you time to interactively debug', async function() {
+        await delay(60 * 1000);
         assert.equal(await this.page.title(), this.zoomConfig.testMeetingTitle);
     });
 
