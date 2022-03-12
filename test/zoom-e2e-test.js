@@ -19,6 +19,10 @@ async function WaitForInMeeting(page, timeout = 30 * 1000) {
 describe('minimeet extension', function() {
     const extensionPath = path.join(__dirname, '../mv3');
 
+    before('Load zoom config', function() {
+        this.zoomConfig = getZoomConfig();
+    });
+
     beforeEach('Start browser', async function() {
         this.timeout(20 * 1000);
         this.browser = await puppeteer.launch({
@@ -43,10 +47,9 @@ describe('minimeet extension', function() {
         this.timeout(90 * 1000);
 
         const page = await this.browser.newPage();
-        await page.goto('https://zoom.us/wc/join/71765738610?pwd=bR0Q7ST2McMycLVVBFYKqw9Lc3ZkuP.1');
+        await page.goto(this.zoomConfig.testMeetingUrl);
 
         await WaitForInMeeting(page);
-        const DAILY_TEST_MEETING_TITLE = "Daily test meeting";
-        assert.equal(await page.title(), DAILY_TEST_MEETING_TITLE);
+        assert.equal(await page.title(), this.zoomConfig.testMeetingTitle);
     });
 });
