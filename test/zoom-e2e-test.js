@@ -1,6 +1,12 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
+
+function getZoomConfig() {
+    const zoomConfigFilePath = path.join(__dirname, 'zoom-config.json');;
+    return JSON.parse(fs.readFileSync(zoomConfigFilePath));
+}
 
 async function WaitForInMeeting(page, timeout = 30 * 1000) {
     await page.waitForSelector(
