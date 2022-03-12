@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/pmansour/minimeet#readme",
   "dependencies": {
-    "mocha": "^9.2.0",
-    "puppeteer": "^13.1.2"
+    "mocha": "^9.2.2",
+    "puppeteer": "^13.5.1"
   }
 }
