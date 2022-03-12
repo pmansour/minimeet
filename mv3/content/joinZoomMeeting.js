@@ -47,4 +47,4 @@ setInterval(() => {
     startVideo();
     enterRoomName();
     joinMeeting();
-}, 2000);
+}, 1000);
