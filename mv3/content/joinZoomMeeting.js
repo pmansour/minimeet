@@ -22,6 +22,8 @@ function enterRoomName() {
     const nameInput = getElement(bySelector('input[name=inputname]'));
     if (nameInput) {
         nameInput.value = 'Meeting room';
+        // Zoom only enables the join button if an input event was detected.
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
 }
 
@@ -38,5 +40,3 @@ setInterval(() => {
     enterRoomName();
     joinMeeting();
 }, 2000);
-
-// https://zoom.us/wc/join/463797604
