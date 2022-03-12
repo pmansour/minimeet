@@ -42,10 +42,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             }
             break;
         default:
+            // TODO: refactor this into a zoom-specific targeting function.
             if (url.hostname.match('zoom.us')) {
                 addMeetingContentSettings('https://*.zoom.us/*');
-                if (url.pathname.match('\/wc\/join\/')) {
+                if (url.pathname.match('\/wc\/join\/[0-9]+')) {
                     await executeModule(tabId, 'content/joinZoomMeeting.js');
+                } else if (url.pathname.match('\/wc\/[0-9]+\/join')) {
+                    await executeModule(tabId, 'content/withinZoomMeeting.js');
                 }
                 break;
             }
