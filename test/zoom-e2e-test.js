@@ -23,6 +23,7 @@ function delay(timeoutMs) {
 }
 
 describe('minimeet extension', function() {
+    this.timeout(0);
     const extensionPath = path.join(__dirname, '../mv3');
 
     before('load zoom config', function() {
@@ -46,22 +47,20 @@ describe('minimeet extension', function() {
     });
 
     it('joins successfully', async function() {
-        this.timeout(90 * 1000);
-
         await WaitForInMeeting(this.page);
         assert.equal(await this.page.title(), this.zoomConfig.testMeetingTitle);
     });
 
-    it('sticks around', async function() {
-        this.timeout(90 * 1000);
+    xit('inserts room name successfully', function() {});
+    it('unmutes successfully', async function() {
+        await this.page.waitForSelector('*[arialabel="mute my microphone"]', { timeout: 20 * 1000 });
+    });
+    xit('starts video successfully', function() {});
 
-        await delay(5 * 1000);
+    it('sticks around', async function() {
+        await delay(1 * 1000);
         assert.equal(await this.page.title(), this.zoomConfig.testMeetingTitle);
     });
-
-    xit('inserts room name successfully', function() {});
-    xit('unmutes successfully', function() {});
-    xit('starts video successfully', function() {});
 
     after('close browser', async function() {
         this.timeout(20 * 1000);
