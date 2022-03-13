@@ -39,7 +39,7 @@ async function onGooglePageLoad(parsedUrl, tabId) {
             }
             break;
         default:
-            info(`Ignoring unknown Google site '${parsedUrl.hostname}'..`);
+            info(`Ignoring unknown Google hostname '${parsedUrl.hostname}'..`);
             break;
     }
 }
@@ -55,7 +55,7 @@ async function onZoomPageLoad(parsedUrl, tabId) {
     } else if (parsedUrl.pathname.match('\/wc\/[0-9]+\/join')) {
         await executeModule(tabId, 'content/zoomPostJoin.js');
     } else {
-        info(`Ignoring unknown Zoom site '${parsedUrl.hostname}'..`);
+        info(`Ignoring unknown Zoom site '${parsedUrl.toString()}'..`);
     }
 }
 
@@ -70,6 +70,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     } else if (url.hostname.match('zoom\.us$')) {
         onZoomPageLoad(url, tabId);
     } else {
-        info(`Ignoring unknown site '${url.hostname}'..`);
+        info(`Ignoring unknown hostname '${url.hostname}'..`);
     }
 });
