@@ -35,15 +35,6 @@ function startVideo() {
     if (btn) {
         btn.click();
     }
-
-    // TODO: figure out why this is still blocked on a manual click, and how we can automate that.
-    setTimeout(() => {
-        const mainCanvas = getElement(bySelector('#speak-view-video'));
-        if (!mainCanvas) return;
-        mainCanvas.dispatchEvent(new Event('focus', { bubbles: true }));
-        mainCanvas.dispatchEvent(new Event('mouseover', { bubbles: true }));
-        mainCanvas.click();
-    }, 10*1000);
 }
 
 var videoWasInitialized = false;
