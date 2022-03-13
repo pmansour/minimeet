@@ -1,13 +1,13 @@
 name: Google integration tests
 # Run on any push or PR to 'main', and once a day.
-on:
-  push:
-    branches:
-      - main
-  # TODO(pmansour): re-enable this after the relevant issue is resolved.
-  # https://github.com/pmansour/minimeet/issues/5
-  # schedule:
-  #   - cron: '30 11 * * *'
+# TODO(pmansour): re-enable this after the relevant issue is resolved.
+# https://github.com/pmansour/minimeet/issues/5
+# on:
+#   push:
+#     branches:
+#       - main
+#   schedule:
+#     - cron: '30 11 * * *'
 jobs:
   run-google-e2e-test:
     environment: test
