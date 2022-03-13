@@ -1,6 +1,7 @@
 name: Zoom integration tests
 # Run on any push or PR to 'main', and once a day.
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - main
