@@ -1,4 +1,8 @@
-import { getElement, byButtonText, bySelector, byVisibleSelfText } from '/util/dom.js';
+/**
+ * Runs on the specific Zoom meeting page after joining, and configures various in-meeting options.
+ */
+
+import { getElement, byButtonText, bySelector } from '/util/dom.js';
 import { info } from '/util/logging.js';
 
 function joinAudioByComputer() {
