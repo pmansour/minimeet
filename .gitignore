@@ -112,5 +112,6 @@ bin/
 *.pem
 *.zip
 
-# Don't commit credentials.
+# Don't commit test runtime configs.
 test-creds.json
+zoom-config.json

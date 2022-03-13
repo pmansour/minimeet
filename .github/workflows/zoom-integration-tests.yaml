@@ -1,0 +1,33 @@
+name: Zoom integration tests
+# Run on any push or PR to 'main', and once a day.
+on:
+  push:
+    branches:
+      - main
+      # TODO: remove this after this branch is merged.
+      - add-zoom-support
+  schedule:
+    - cron: '30 11 * * *'
+jobs:
+  run-zoom-e2e-test:
+    environment: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Prepare zoom config
+        shell: bash
+        env:
+          ZOOM_MEETING_URL: ${{ secrets.ZOOM_MEETING_URL }}
+          ZOOM_MEETING_TITLE: ${{ secrets.ZOOM_MEETING_TITLE }}
+        run: |
+          printf '{
+            "testMeetingUrl": "%s",
+            "testMeetingTitle": "%s"
+          }' "$ZOOM_MEETING_URL" "$ZOOM_MEETING_TITLE" > test/zoom-config.json
+      - run: npm ci
+      - name: Install xvfb
+        run: sudo apt install xvfb --yes --quiet
+      - run: xvfb-run npm test test/zoom-e2e-test.js
