@@ -1,8 +1,9 @@
 name: Google integration tests
 # Run on any push or PR to 'main', and once a day.
+on:
+  workflow_dispatch: {}
 # TODO(pmansour): re-enable this after the relevant issue is resolved.
 # https://github.com/pmansour/minimeet/issues/5
-# on:
 #   push:
 #     branches:
 #       - main
