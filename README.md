@@ -1,5 +1,6 @@
 # minimeet
 
+[![Google integration tests](https://github.com/pmansour/minimeet/actions/workflows/google-integration-tests.yaml/badge.svg?branch=main)](https://github.com/pmansour/minimeet/actions/workflows/google-integration-tests.yaml)
 [![Zoom integration tests](https://github.com/pmansour/minimeet/actions/workflows/zoom-integration-tests.yaml/badge.svg?branch=main)](https://github.com/pmansour/minimeet/actions/workflows/zoom-integration-tests.yaml)
 
 This is a Chrome extension that adds the following functionality, depending on the website that was visited:
