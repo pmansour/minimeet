@@ -16,25 +16,34 @@ function dismissModal() {
 }
 
 function audioIsReady() {
-    return !!getElement(byVisibleSelfText('Mute')) || !!getElement(byVisibleSelfText('Unmute'));
+    return !!getElement(byButtonText('Mute')) || !!getElement(byButtonText('Unmute'));
 }
 
 function unmuteAudio() {
-    const btn = getElement(byVisibleSelfText('Unmute'));
+    const btn = getElement(byButtonText('Unmute'));
     if (btn) {
         btn.click();
     }
 }
 
 function videoIsReady() {
-    return !!getElement(byVisibleSelfText('Start Video')) || !!getElement(byVisibleSelfText('Stop Video'));
+    return !!getElement(byButtonText('Start Video')) || !!getElement(byButtonText('Stop Video'));
 }
 
 function startVideo() {
-    const btn = getElement(byVisibleSelfText('Start Video'));
+    const btn = getElement(byButtonText('Start Video'));
     if (btn) {
         btn.click();
     }
+
+    // TODO: figure out why this is still blocked on a manual click, and how we can automate that.
+    setTimeout(() => {
+        const mainCanvas = getElement(bySelector('#speak-view-video'));
+        if (!mainCanvas) return;
+        mainCanvas.dispatchEvent(new Event('focus', { bubbles: true }));
+        mainCanvas.dispatchEvent(new Event('mouseover', { bubbles: true }));
+        mainCanvas.click();
+    }, 10*1000);
 }
 
 var videoWasInitialized = false;
@@ -51,9 +60,7 @@ setInterval(() => {
         audioWasInitialized = true;
         info('Minimeet: Unmuted microphone');
     }
-    // Delay enabling video until after audio is initialized, since doing it too early sometimes
-    // doesn't work.
-    if (!videoWasInitialized && videoIsReady() && audioWasInitialized) {
+    if (!videoWasInitialized && videoIsReady()) {
         startVideo();
         videoWasInitialized = true;
         info('Minimeet: Started video');
