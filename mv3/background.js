@@ -1,4 +1,5 @@
 import { executeModule } from '/util/injection.js';
+import { info } from '/util/logging.js';
 import { getLoginRedirectUrl, meetBaseUrl } from '/util/url.js';
 
 // Adds the necessary content settings for sites that do meetings (e.g. Google Meets, Zoom).
@@ -17,13 +18,9 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.update(tab.id, { url: getLoginRedirectUrl(meetBaseUrl) });
 });
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    if (changeInfo.status !== 'complete' || !tab.url || !tab.url.startsWith('http')) {
-        return;
-    }
-
-    const url = new URL(tab.url);
-    switch (url.hostname) {
+// Gets called when a new tab finished loading with a URL whose hostname ends in google.com.
+async function onGooglePageLoad(parsedUrl, tabId) {
+    switch (parsedUrl.hostname) {
         case 'accounts.google.com':
             await executeModule(tabId, 'content/login.js');
             break;
@@ -34,7 +31,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             break;
         case 'meet.google.com':
             addMeetingContentSettings('https://*.google.com/*');
-            if (url.pathname === '/') {
+            if (parsedUrl.pathname === '/') {
                 // This is the base Meet page. Pick a meeting.
                 await executeModule(tabId, 'content/selectMeeting.js');
             } else {
@@ -42,17 +39,37 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             }
             break;
         default:
-            // TODO: refactor this into a zoom-specific targeting function.
-            if (url.hostname.match('zoom.us')) {
-                addMeetingContentSettings('https://*.zoom.us/*');
-                if (url.pathname.match('\/wc\/join\/[0-9]+')) {
-                    await executeModule(tabId, 'content/joinZoomMeeting.js');
-                } else if (url.pathname.match('\/wc\/[0-9]+\/join')) {
-                    await executeModule(tabId, 'content/withinZoomMeeting.js');
-                }
-                break;
-            }
-            console.log('Dont care about this site, ignoring..');
+            info(`Ignoring unknown Google site '${parsedUrl.hostname}'..`);
             break;
+    }
+}
+
+// Gets called when a new tab finished loading with a URL whose hostname ends in zoom.us.
+async function onZoomPageLoad(parsedUrl, tabId) {
+    addMeetingContentSettings('https://*.zoom.us/*');
+    // Zoom has an interesting URL naming convention:
+    // wc/join/{meetingId} is the pre-joining page
+    // wc/{meetingId}/join is the post-joining page
+    if (parsedUrl.pathname.match('\/wc\/join\/[0-9]+')) {
+        await executeModule(tabId, 'content/zoomPreJoin.js');
+    } else if (parsedUrl.pathname.match('\/wc\/[0-9]+\/join')) {
+        await executeModule(tabId, 'content/zoomPostJoin.js');
+    } else {
+        info(`Ignoring unknown Zoom site '${parsedUrl.hostname}'..`);
+    }
+}
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    if (changeInfo.status !== 'complete' || !tab.url || !tab.url.startsWith('http')) {
+        return;
+    }
+
+    const url = new URL(tab.url);
+    if (url.hostname.match('google\.com$')) {
+        onGooglePageLoad(url, tabId);
+    } else if (url.hostname.match('zoom\.us$')) {
+        onZoomPageLoad(url, tabId);
+    } else {
+        info(`Ignoring unknown site '${url.hostname}'..`);
     }
 });
