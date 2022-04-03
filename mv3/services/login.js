@@ -35,7 +35,9 @@ export const LOGIN_STATE = Object.freeze({
         }
     }
     // Happens periodically when you're logged in but from a new IP or something.
-    if (getElement(byVisibleSelfText("Verify it's you"))) {
+    const hasVisibleInputs = !!getElement(bySelector('input:not([type=hidden])'));
+    const nextButton = getElement(byButtonText('Next'));
+    if (!hasVisibleInputs && !!nextButton) {
         return LOGIN_STATE.INFO_MESSAGE_NO_INPUT;
     }
     return LOGIN_STATE.UNKNOWN;
