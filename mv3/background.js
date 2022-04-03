@@ -47,10 +47,17 @@ async function onGooglePageLoad(parsedUrl, tabId) {
 // Gets called when a new tab finished loading with a URL whose hostname ends in zoom.us.
 async function onZoomPageLoad(parsedUrl, tabId) {
     addMeetingContentSettings('https://*.zoom.us/*');
+    // Non-web join URLs start with /j/* instead of /wc/*.
+    // We need to redirect those to use the web client.
+    const nonWebJoinUrlMatch = parsedUrl.pathname.match('^\/j\/([0-9]+)');
+    if (nonWebJoinUrlMatch && nonWebJoinUrlMatch[1]) {
+        const meetingId = nonWebJoinUrlMatch[1];
+        const redirectUrl = `https://zoom.us/wc/join/${meetingId}`;
+        await chrome.tabs.update(tabId, { url: redirectUrl });
     // Zoom has an interesting URL naming convention:
     // wc/join/{meetingId} is the pre-joining page
     // wc/{meetingId}/join is the post-joining page
-    if (parsedUrl.pathname.match('\/wc\/join\/[0-9]+')) {
+    } else if (parsedUrl.pathname.match('\/wc\/join\/[0-9]+')) {
         await executeModule(tabId, 'content/zoomPreJoin.js');
     } else if (parsedUrl.pathname.match('\/wc\/[0-9]+\/join')) {
         await executeModule(tabId, 'content/zoomPostJoin.js');
