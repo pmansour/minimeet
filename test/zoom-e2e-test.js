@@ -47,13 +47,13 @@ describe('minimeet extension', function() {
         assert.equal(await this.page.evaluate('MeetingConfig.userName'), 'Meeting room');
     });
     it('unmutes the microphone', async function() {
-        await this.page.waitForSelector('*[arialabel="mute my microphone"]', { timeout: 30 * 1000 });
+        await this.page.waitForSelector('*[aria-label="mute my microphone"]', { timeout: 30 * 1000 });
     });
     // Commented out since the video stream still requires a manual click on the screen for some reason.
     // Potential cause: https://developer.chrome.com/blog/autoplay/, but the chrome flags there don't help.
     // Note that this doesn't happen in regular browser windows, but only in puppeteer.
     xit('starts video', async function() {
-        await this.page.waitForSelector('*[arialabel="stop sending my video"]', { timeout: 30 * 1000 });
+        await this.page.waitForSelector('*[aria-label="stop my video, button"]', { timeout: 30 * 1000 });
     });
 
     // This is useful for debugging UI test issues. Remove the 'x' to run this locally.
