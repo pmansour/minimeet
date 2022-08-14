@@ -72,7 +72,7 @@ export const PASSWORD = '${creds.password}';
         await this.browser.close();
     });
 
-    it('Logs in successfully', async function() {
+    it('should log in successfully', async function() {
         this.timeout(30 * 1000);
 
         const page = await this.browser.newPage();
@@ -85,21 +85,19 @@ export const PASSWORD = '${creds.password}';
             `Page is not logged in as account '${expectedUsername}'.`);
     });
 
-    describe('with meetings', function() {
-        // TODO: implement these.
-        xit('should join an existing meeting starting in the near future', function() {});
-        xit('should join an existing meeting that started in the recent past', function() {});
-        xit('should join a meeting created after it loads', function() {});
+    // TODO: implement these.
+    xit('should join an existing meeting starting in the near future', function() {});
+    xit('should join an existing meeting that started in the recent past', function() {});
+    xit('should join a meeting created after it loads', function() {});
 
-        it('should join a static daily meeting on the test user\'s calendar', async function() {
-            this.timeout(40 * 1000);
+    it('should join a static daily meeting on the test user\'s calendar', async function() {
+        this.timeout(40 * 1000);
 
-            const page = await this.browser.newPage();
-            await page.goto('https://meet.google.com');
+        const page = await this.browser.newPage();
+        await page.goto('https://meet.google.com');
 
-            // Meeting title of the recurring meeting that should exist on the test user's calendar.
-            const DAILY_TEST_MEETING_TITLE = "Daily test meeting";
-            await WaitForInMeeting(page, /*title=*/DAILY_TEST_MEETING_TITLE, /*timeout=*/30*1000);
-        });
+        // Meeting title of the recurring meeting that should exist on the test user's calendar.
+        const DAILY_TEST_MEETING_TITLE = "Daily test meeting";
+        await WaitForInMeeting(page, /*title=*/DAILY_TEST_MEETING_TITLE, /*timeout=*/30*1000);
     });
 });
