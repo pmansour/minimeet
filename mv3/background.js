@@ -52,7 +52,7 @@ async function onZoomPageLoad(parsedUrl, tabId) {
     const nonWebJoinUrlMatch = parsedUrl.pathname.match('^\/j\/([0-9]+)');
     if (nonWebJoinUrlMatch && nonWebJoinUrlMatch[1]) {
         const meetingId = nonWebJoinUrlMatch[1];
-        const redirectUrl = `https://zoom.us/wc/join/${meetingId}`;
+        const redirectUrl = `https://zoom.us/wc/join/${meetingId}?${parsedUrl.searchParams.toString()}`;
         await chrome.tabs.update(tabId, { url: redirectUrl });
     // Zoom has an interesting URL naming convention:
     // wc/join/{meetingId} is the pre-joining page
