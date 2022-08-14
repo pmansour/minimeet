@@ -1,7 +1,7 @@
 {
     "name": "MiniMeet",
     "description": "Automatically join meetings on your calendar.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "permissions": [
         "activeTab",
         "contentSettings",
