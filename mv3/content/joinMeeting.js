@@ -5,7 +5,7 @@
 import { getElement, byVisibleSelfText } from '/util/dom.js';
 
 function joinMeeting() {
-    const btn = getElement(byVisibleSelfText('Join now'));
+    const btn = getElement(byVisibleSelfText('Join now')) || getElement(byVisibleSelfText('Ask to join'));
     if (btn) {
         btn.click();
     }
