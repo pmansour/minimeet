@@ -2,7 +2,7 @@
  * Runs on the specific meeting page, and hits the 'Join now' button if it exists.
  */
 
-import { getElement, byVisibleSelfText } from '/util/dom.js';
+import { getElement, byVisibleSelfText, byButtonText } from '/util/dom.js';
 
 function joinMeeting() {
     const btn = getElement(byVisibleSelfText('Join now')) || getElement(byVisibleSelfText('Ask to join'));
@@ -14,7 +14,7 @@ function joinMeeting() {
 function dismissAnnoyingNotification() {
     // Meet is trying to be helpful, but this is not useful for a touchless UI.
     if (getElement(byVisibleSelfText('You have extensions installed that may affect the quality of your call'))) {
-        const dismissBtn = getElement(byVisibleSelfText('Dismiss'));
+        const dismissBtn = getElement(byButtonText('Dismiss'));
         if (dismissBtn) {
             btn.click();
         }
