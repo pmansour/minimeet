@@ -37,7 +37,8 @@ export const LOGIN_STATE = Object.freeze({
     // Happens periodically when you're logged in but from a new IP or something.
     const hasVisibleInputs = !!getElement(bySelector('input:not([type=hidden])'));
     const nextButton = getElement(byButtonText('Next'));
-    if (!hasVisibleInputs && !!nextButton) {
+    const notNowButton = getElement(byButtonText('Not now'));
+    if (!hasVisibleInputs && (!!nextButton || !!notNowButton)) {
         return LOGIN_STATE.INFO_MESSAGE_NO_INPUT;
     }
     return LOGIN_STATE.UNKNOWN;
@@ -65,6 +66,9 @@ export function clickSwitchAccount() {
     getElement(byAriaLabel('Switch account')).click();
 }
 
-export function clickNext() {
-    getElement(byButtonText('Next')).click();
+export function moveForwardOnInfoScreen() {
+    let btn = getElement(byButtonText('Next')) || getElement(byButtonText('Not now'));
+    if (btn) {
+        btn.click();
+    }
 }

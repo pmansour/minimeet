@@ -1,5 +1,5 @@
 import * as creds from '/config/creds.js';
-import { getLoginState, LOGIN_STATE, clickProfileIdentifier, clickSwitchAccount, clickUseAnotherAccount, enterEmail, enterPassword, clickNext } from '../services/login.js';
+import { getLoginState, LOGIN_STATE, clickProfileIdentifier, clickSwitchAccount, clickUseAnotherAccount, enterEmail, enterPassword, moveForwardOnInfoScreen } from '../services/login.js';
 import { info, debug } from '/util/logging.js';
 
 info('Hello from the login script!');
@@ -32,7 +32,7 @@ function doLogin() {
             break;
         case LOGIN_STATE.INFO_MESSAGE_NO_INPUT:
             debug('Skipping info message..');
-            clickNext();
+            moveForwardOnInfoScreen();
             break;
         default:
             error('Unknown login state');
